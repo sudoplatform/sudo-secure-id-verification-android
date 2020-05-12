@@ -153,7 +153,7 @@ class DefaultSudoIdentityVerificationClient(
         private const val VERIFICATION_METHOD = "KNOWLEDGE_OF_PII"
     }
 
-    override val version: String = "1.0"
+    override val version: String = "2.0.2"
 
     /**
      * GraphQL client used for calling Sudo service API.
