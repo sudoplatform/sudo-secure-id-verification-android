@@ -1,0 +1,89 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>VerifiedIdentity - sudoidentityverification</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">sudoidentityverification</a>&nbsp;/&nbsp;<a href="../index.html">com.sudoplatform.sudoidentityverification</a>&nbsp;/&nbsp;<a href="./index.html">VerifiedIdentity</a><br/>
+<br/>
+<h1>VerifiedIdentity</h1>
+<code><span class="keyword">data</span> <span class="keyword">class </span><span class="identifier">VerifiedIdentity</span></code>
+<p>Represents a verified identity resulting from calling <a href="../-sudo-identity-verification-client/verify-identity.html">SudoIdentityVerificationClient.verifyIdentity</a> API.</p>
+<h3>Constructors</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="-init-.html">&lt;init&gt;</a></p>
+</td>
+<td>
+<code><span class="identifier">VerifiedIdentity</span><span class="symbol">(</span><span class="identifier" id="com.sudoplatform.sudoidentityverification.VerifiedIdentity$<init>(kotlin.String, kotlin.Boolean, java.util.Date, kotlin.String, kotlin.Boolean, kotlin.String)/owner">owner</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">, </span><span class="identifier" id="com.sudoplatform.sudoidentityverification.VerifiedIdentity$<init>(kotlin.String, kotlin.Boolean, java.util.Date, kotlin.String, kotlin.Boolean, kotlin.String)/verified">verified</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html"><span class="identifier">Boolean</span></a><span class="symbol">, </span><span class="identifier" id="com.sudoplatform.sudoidentityverification.VerifiedIdentity$<init>(kotlin.String, kotlin.Boolean, java.util.Date, kotlin.String, kotlin.Boolean, kotlin.String)/verifiedAt">verifiedAt</span><span class="symbol">:</span>&nbsp;<a href="https://docs.oracle.com/javase/6/docs/api/java/util/Date.html"><span class="identifier">Date</span></a><span class="symbol">?</span><span class="symbol">, </span><span class="identifier" id="com.sudoplatform.sudoidentityverification.VerifiedIdentity$<init>(kotlin.String, kotlin.Boolean, java.util.Date, kotlin.String, kotlin.Boolean, kotlin.String)/verificationMethod">verificationMethod</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">, </span><span class="identifier" id="com.sudoplatform.sudoidentityverification.VerifiedIdentity$<init>(kotlin.String, kotlin.Boolean, java.util.Date, kotlin.String, kotlin.Boolean, kotlin.String)/canAttemptVerificationAgain">canAttemptVerificationAgain</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html"><span class="identifier">Boolean</span></a><span class="symbol">, </span><span class="identifier" id="com.sudoplatform.sudoidentityverification.VerifiedIdentity$<init>(kotlin.String, kotlin.Boolean, java.util.Date, kotlin.String, kotlin.Boolean, kotlin.String)/idScanUrl">idScanUrl</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">?</span><span class="symbol">)</span></code>
+<p>Represents a verified identity resulting from calling <a href="../-sudo-identity-verification-client/verify-identity.html">SudoIdentityVerificationClient.verifyIdentity</a> API.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<h3>Properties</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="can-attempt-verification-again.html">canAttemptVerificationAgain</a></p>
+</td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">canAttemptVerificationAgain</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html"><span class="identifier">Boolean</span></a></code>
+<p>Indicates whether or not identity verification can be attempted again for this user. Set to
+false in cases where the maximum number of attempts has been reached or a finding from the
+identity verification attempt means that it should not proceed.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="id-scan-url.html">idScanUrl</a></p>
+</td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">idScanUrl</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">?</span></code>
+<p>URL to upload the scanned documents for identity verification.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="owner.html">owner</a></p>
+</td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">owner</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a></code>
+<p>User ID of the user who provided identity details for verification.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="verification-method.html">verificationMethod</a></p>
+</td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">verificationMethod</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a></code>
+<p>Verification method used.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="verified.html">verified</a></p>
+</td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">verified</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html"><span class="identifier">Boolean</span></a></code>
+<p><code>true</code> if the identity was verified successfully.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="verified-at.html">verifiedAt</a></p>
+</td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">verifiedAt</span><span class="symbol">: </span><a href="https://docs.oracle.com/javase/6/docs/api/java/util/Date.html"><span class="identifier">Date</span></a><span class="symbol">?</span></code>
+<p>Date and time at which the identity was verified.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>

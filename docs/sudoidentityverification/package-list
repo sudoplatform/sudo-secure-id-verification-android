@@ -1,0 +1,5 @@
+$dokka.format:html
+$dokka.linkExtension:html
+
+com.sudoplatform.sudoidentityverification
+com.sudoplatform.sudoidentityverification.type

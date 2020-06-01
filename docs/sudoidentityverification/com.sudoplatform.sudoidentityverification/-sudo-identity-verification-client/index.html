@@ -1,0 +1,85 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>SudoIdentityVerificationClient - sudoidentityverification</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">sudoidentityverification</a>&nbsp;/&nbsp;<a href="../index.html">com.sudoplatform.sudoidentityverification</a>&nbsp;/&nbsp;<a href="./index.html">SudoIdentityVerificationClient</a><br/>
+<br/>
+<h1>SudoIdentityVerificationClient</h1>
+<code><span class="keyword">interface </span><span class="identifier">SudoIdentityVerificationClient</span></code>
+<p>Interface encapsulating a library of functions for identity verification.</p>
+<h3>Properties</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="version.html">version</a></p>
+</td>
+<td>
+<code><span class="keyword">abstract</span> <span class="keyword">val </span><span class="identifier">version</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a></code>
+<p>Client version.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<h3>Functions</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="check-identity-verification.html">checkIdentityVerification</a></p>
+</td>
+<td>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">checkIdentityVerification</span><span class="symbol">(</span><span class="identifier" id="com.sudoplatform.sudoidentityverification.SudoIdentityVerificationClient$checkIdentityVerification(com.sudoplatform.sudoidentityverification.QueryOption, kotlin.Function1((com.sudoplatform.sudoidentityverification.VerificationResult, kotlin.Unit)))/option">option</span><span class="symbol">:</span>&nbsp;<a href="../-query-option/index.html"><span class="identifier">QueryOption</span></a><span class="symbol">, </span><span class="identifier" id="com.sudoplatform.sudoidentityverification.SudoIdentityVerificationClient$checkIdentityVerification(com.sudoplatform.sudoidentityverification.QueryOption, kotlin.Function1((com.sudoplatform.sudoidentityverification.VerificationResult, kotlin.Unit)))/callback">callback</span><span class="symbol">:</span>&nbsp;<span class="symbol">(</span><a href="../-verification-result/index.html"><span class="identifier">VerificationResult</span></a><span class="symbol">)</span>&nbsp;<span class="symbol">-&gt;</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
+<p>Checks the identity verification status of the currently signed in user.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="get-supported-countries.html">getSupportedCountries</a></p>
+</td>
+<td>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">getSupportedCountries</span><span class="symbol">(</span><span class="identifier" id="com.sudoplatform.sudoidentityverification.SudoIdentityVerificationClient$getSupportedCountries(kotlin.Function1((com.sudoplatform.sudoidentityverification.GetSupportedCountriesResult, kotlin.Unit)))/callback">callback</span><span class="symbol">:</span>&nbsp;<span class="symbol">(</span><a href="../-get-supported-countries-result/index.html"><span class="identifier">GetSupportedCountriesResult</span></a><span class="symbol">)</span>&nbsp;<span class="symbol">-&gt;</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
+<p>Retrieves the list of supported countries for identity verification.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="reset.html">reset</a></p>
+</td>
+<td>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">reset</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
+<p>Reset any internal state and cached content.</p>
+</td>
+</tr>
+<tr>
+<td>
+<p><a href="verify-identity.html">verifyIdentity</a></p>
+</td>
+<td>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">verifyIdentity</span><span class="symbol">(</span><span class="identifier" id="com.sudoplatform.sudoidentityverification.SudoIdentityVerificationClient$verifyIdentity(kotlin.String, kotlin.String, kotlin.String, kotlin.String, kotlin.String, kotlin.String, kotlin.String, kotlin.String, kotlin.Function1((com.sudoplatform.sudoidentityverification.VerificationResult, kotlin.Unit)))/firstName">firstName</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">, </span><span class="identifier" id="com.sudoplatform.sudoidentityverification.SudoIdentityVerificationClient$verifyIdentity(kotlin.String, kotlin.String, kotlin.String, kotlin.String, kotlin.String, kotlin.String, kotlin.String, kotlin.String, kotlin.Function1((com.sudoplatform.sudoidentityverification.VerificationResult, kotlin.Unit)))/lastName">lastName</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">, </span><span class="identifier" id="com.sudoplatform.sudoidentityverification.SudoIdentityVerificationClient$verifyIdentity(kotlin.String, kotlin.String, kotlin.String, kotlin.String, kotlin.String, kotlin.String, kotlin.String, kotlin.String, kotlin.Function1((com.sudoplatform.sudoidentityverification.VerificationResult, kotlin.Unit)))/address">address</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">, </span><span class="identifier" id="com.sudoplatform.sudoidentityverification.SudoIdentityVerificationClient$verifyIdentity(kotlin.String, kotlin.String, kotlin.String, kotlin.String, kotlin.String, kotlin.String, kotlin.String, kotlin.String, kotlin.Function1((com.sudoplatform.sudoidentityverification.VerificationResult, kotlin.Unit)))/city">city</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">?</span><span class="symbol">, </span><span class="identifier" id="com.sudoplatform.sudoidentityverification.SudoIdentityVerificationClient$verifyIdentity(kotlin.String, kotlin.String, kotlin.String, kotlin.String, kotlin.String, kotlin.String, kotlin.String, kotlin.String, kotlin.Function1((com.sudoplatform.sudoidentityverification.VerificationResult, kotlin.Unit)))/state">state</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">, </span><span class="identifier" id="com.sudoplatform.sudoidentityverification.SudoIdentityVerificationClient$verifyIdentity(kotlin.String, kotlin.String, kotlin.String, kotlin.String, kotlin.String, kotlin.String, kotlin.String, kotlin.String, kotlin.Function1((com.sudoplatform.sudoidentityverification.VerificationResult, kotlin.Unit)))/postalCode">postalCode</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">, </span><span class="identifier" id="com.sudoplatform.sudoidentityverification.SudoIdentityVerificationClient$verifyIdentity(kotlin.String, kotlin.String, kotlin.String, kotlin.String, kotlin.String, kotlin.String, kotlin.String, kotlin.String, kotlin.Function1((com.sudoplatform.sudoidentityverification.VerificationResult, kotlin.Unit)))/country">country</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">, </span><span class="identifier" id="com.sudoplatform.sudoidentityverification.SudoIdentityVerificationClient$verifyIdentity(kotlin.String, kotlin.String, kotlin.String, kotlin.String, kotlin.String, kotlin.String, kotlin.String, kotlin.String, kotlin.Function1((com.sudoplatform.sudoidentityverification.VerificationResult, kotlin.Unit)))/dateOfBirth">dateOfBirth</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">, </span><span class="identifier" id="com.sudoplatform.sudoidentityverification.SudoIdentityVerificationClient$verifyIdentity(kotlin.String, kotlin.String, kotlin.String, kotlin.String, kotlin.String, kotlin.String, kotlin.String, kotlin.String, kotlin.Function1((com.sudoplatform.sudoidentityverification.VerificationResult, kotlin.Unit)))/callback">callback</span><span class="symbol">:</span>&nbsp;<span class="symbol">(</span><a href="../-verification-result/index.html"><span class="identifier">VerificationResult</span></a><span class="symbol">)</span>&nbsp;<span class="symbol">-&gt;</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
+<p>Verifies an identity against the known public records and returns a result indicating whether or not the identity
+details provided was verified with enough confidence to grant the user access to Sudo platform functions such
+as provisioning a virtual card.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<h3>Inheritors</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<p><a href="../-default-sudo-identity-verification-client/index.html">DefaultSudoIdentityVerificationClient</a></p>
+</td>
+<td>
+<code><span class="keyword">class </span><span class="identifier">DefaultSudoIdentityVerificationClient</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="./index.html"><span class="identifier">SudoIdentityVerificationClient</span></a></code>
+<p>Default implementation of <a href="./index.html">SudoIdentityVerificationClient</a> interface.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>

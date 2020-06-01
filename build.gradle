@@ -31,6 +31,7 @@ apply plugin: 'io.codearte.nexus-staging'
 allprojects {
     repositories {
         google()
+        mavenCentral()
         jcenter()
     }
 }
