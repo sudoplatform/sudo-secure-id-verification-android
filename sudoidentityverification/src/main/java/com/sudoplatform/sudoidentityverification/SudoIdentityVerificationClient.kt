@@ -101,7 +101,7 @@ interface SudoIdentityVerificationClient {
      * @param city city. Case insensitive.
      * @param state state. This is abbreviated name for the state, e.g. ‘NY’ not ‘New York’.
      * @param postalCode postal code.
-     * @param country ISO 3166-1 alpha-3 country code. Must be one of countries retrieved via [getSupportedCountries] API.
+     * @param country ISO 3166-1 alpha-2 country code. Must be one of countries retrieved via [getSupportedCountries] API.
      * @param dateOfBirth date of birth formatted in "yyyy-MM-dd".
      * @param callback callback for returning verification result or error.
      */
@@ -110,7 +110,7 @@ interface SudoIdentityVerificationClient {
         lastName: String,
         address: String,
         city: String?,
-        state: String,
+        state: String?,
         postalCode: String,
         country: String,
         dateOfBirth: String,
@@ -215,7 +215,7 @@ class DefaultSudoIdentityVerificationClient(
         lastName: String,
         address: String,
         city: String?,
-        state: String,
+        state: String?,
         postalCode: String,
         country: String,
         dateOfBirth: String,
