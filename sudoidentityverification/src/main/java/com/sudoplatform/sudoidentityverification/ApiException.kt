@@ -9,39 +9,11 @@ package com.sudoplatform.sudoidentityverification
 enum class ApiErrorCode {
 
     /**
-     * Invalid configuration parameters were passed.
+     * An internal server error cause the API call to fail. The error is
+     * possibly transient and retrying at a later time may cause the call
+     * to complete successfully.
      */
-    INVALID_CONFIG,
-
-    /**
-     * User is not authorized to perform the operation requested.
-     */
-    NOT_AUTHORIZED,
-
-    /**
-     * Client is not registered.
-     */
-    NOT_REGISTERED,
-
-    /**
-     * Client is not signed in.
-     */
-    NOT_SIGNED_IN,
-
-    /**
-     * Indicates the bad data was found in cache or in backend response.
-     */
-    BAD_DATA,
-
-    /**
-     * Indicates that the identity could not be verified.
-     */
-    IDENTITY_NOT_VERIFIED,
-
-    /**
-     * GraphQL endpoint returned an error.
-     */
-    GRAPHQL_ERROR,
+    SERVER_ERROR,
 
     /**
      * Unexpected error encountered. This could be a result of client or backend bug and unlikely to be user
