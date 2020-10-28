@@ -131,7 +131,10 @@ interface SudoIdentityVerificationClient {
 
 
     /**
-     * Client version.
+     * Checksum's for each file are generated and are used to create a checksum that is used when publishing to maven central.
+     * In order to retry a failed publish without needing to change any functionality, we need a way to generate a different checksum
+     * for the source code.  We can change the value of this property which will generate a different checksum for publishing
+     * and allow us to retry.  The value of `version` doesn't need to be kept up-to-date with the version of the code.
      */
     val version: String
 
@@ -265,7 +268,7 @@ class DefaultSudoIdentityVerificationClient(
         private const val GRAPHQL_ERROR_SERVER_ERROR = "ServerError"
     }
 
-    override val version: String = "2.0.3"
+    override val version: String = "1.0.0"
 
     /**
      * GraphQL client used for calling Sudo service API.
