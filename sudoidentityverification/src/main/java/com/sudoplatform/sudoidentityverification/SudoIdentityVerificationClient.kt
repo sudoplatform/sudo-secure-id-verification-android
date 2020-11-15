@@ -303,6 +303,10 @@ class DefaultSudoIdentityVerificationClient(
     override suspend fun getSupportedCountries(): List<String> {
         this.logger.info("Retrieving the list of supports countries for identity verification.")
 
+        if (!this.sudoUserClient.isSignedIn()) {
+            throw SudoIdentityVerificationException.NotSignedInException()
+        }
+
         val response = this.graphQLClient.query(
             GetSupportedCountriesForIdentityVerificationQuery.builder().build()
         )
@@ -364,6 +368,10 @@ class DefaultSudoIdentityVerificationClient(
         dateOfBirth: String
     ): VerifiedIdentity {
         this.logger.info("Verifying an identity.")
+
+        if (!this.sudoUserClient.isSignedIn()) {
+            throw SudoIdentityVerificationException.NotSignedInException()
+        }
 
         val input = VerifyIdentityInput.builder()
             .verificationMethod(VERIFICATION_METHOD)
@@ -429,6 +437,10 @@ class DefaultSudoIdentityVerificationClient(
 
     override suspend fun checkIdentityVerification(option: QueryOption): VerifiedIdentity {
         this.logger.info("Checking the identity verification status.")
+
+        if (!this.sudoUserClient.isSignedIn()) {
+            throw SudoIdentityVerificationException.NotSignedInException()
+        }
 
         val responseFetcher = when (option) {
             QueryOption.CACHE_ONLY -> {

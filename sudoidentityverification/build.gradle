@@ -67,7 +67,7 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutine_version"
 
     // Sudo Platform SDKs.
-    implementation 'com.sudoplatform:sudouser:[8.0,)'
+    implementation 'com.sudoplatform:sudouser:[8.1,)'
     implementation 'com.sudoplatform:sudokeymanager:[3.4,)'
     implementation 'com.sudoplatform:sudologging:[1.0,)'
     implementation 'com.sudoplatform:sudoconfigmanager:[1.2.2,)'
