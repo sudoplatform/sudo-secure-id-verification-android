@@ -166,7 +166,7 @@ class DefaultSudoIdentityVerificationClient(
         private const val GRAPHQL_ERROR_SERVER_ERROR = "ServerError"
     }
 
-    override val version: String = "1.0.0"
+    override val version: String = "4.0.2"
 
     /**
      * GraphQL client used for calling Sudo service API.
