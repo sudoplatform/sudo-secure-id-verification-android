@@ -14,51 +14,7 @@ import com.sudoplatform.sudoapiclient.ApiClientManager
 import com.sudoplatform.sudoidentityverification.type.VerifyIdentityInput
 import com.sudoplatform.sudologging.Logger
 import com.sudoplatform.sudouser.SudoUserClient
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers.IO
-import kotlinx.coroutines.launch
 import java.util.Date
-
-/**
- * Result returned by API for verifying an identity. The API can fail with an
- * error or return the verified identity.
- */
-sealed class VerificationResult {
-    /**
-     * Encapsulates a successful identity verification result.
-     *
-     * @param verifiedIdentity verified identity details.
-     */
-    data class Success(val verifiedIdentity: VerifiedIdentity) : VerificationResult()
-
-    /**
-     * Encapsulates a failed identity verification result.
-     *
-     * @param error [Throwable] encapsulating the error detail.
-     */
-    data class Failure(val error: Throwable) : VerificationResult()
-}
-
-/**
- * Result returned by API for retrieving the list of supported countries for
- * identity verification. The API can fail with an error or return the list of
- * supported countries..
- */
-sealed class GetSupportedCountriesResult {
-    /**
-     * Encapsulates a successful supported countries retrieval result.
-     *
-     * @param countries list of support countries.
-     */
-    data class Success(val countries: List<String>) : GetSupportedCountriesResult()
-
-    /**
-     * Encapsulates a failed supported countries retrieval result.
-     *
-     * @param error [Throwable] encapsulating the error detail.
-     */
-    data class Failure(val error: Throwable) : GetSupportedCountriesResult()
-}
 
 /**
  * Options for controlling the behaviour of query APIs.
@@ -129,7 +85,6 @@ interface SudoIdentityVerificationClient {
         }
     }
 
-
     /**
      * Checksum's for each file are generated and are used to create a checksum that is used when publishing to maven central.
      * In order to retry a failed publish without needing to change any functionality, we need a way to generate a different checksum
@@ -141,22 +96,10 @@ interface SudoIdentityVerificationClient {
     /**
      * Retrieves the list of supported countries for identity verification.
      *
-     * @param callback callback for returning supported countries retrieval result or error.
-     */
-    @Deprecated(
-        message = "This is deprecated and will be removed in the future.",
-        replaceWith = ReplaceWith("getSupportedCountries()"),
-        level = DeprecationLevel.WARNING
-    )
-    fun getSupportedCountries(callback: (GetSupportedCountriesResult) -> Unit)
-
-    /**
-     * Retrieves the list of supported countries for identity verification.
-     *
      * @return a list of supported countries.
      */
     @Throws(SudoIdentityVerificationException::class)
-    suspend fun getSupportedCountries(): List<String>
+    suspend fun listSupportedCountries(): List<String>
 
     /**
      * Verifies an identity against the known public records and returns a result indicating whether or not the identity
@@ -169,39 +112,7 @@ interface SudoIdentityVerificationClient {
      * @param city city. Case insensitive.
      * @param state state. This is abbreviated name for the state, e.g. ‘NY’ not ‘New York’.
      * @param postalCode postal code.
-     * @param country ISO 3166-1 alpha-2 country code. Must be one of countries retrieved via [getSupportedCountries] API.
-     * @param dateOfBirth date of birth formatted in "yyyy-MM-dd".
-     * @param callback callback for returning verification result or error.
-     */
-    @Deprecated(
-        message = "This is deprecated and will be removed in the future.",
-        replaceWith = ReplaceWith("verifyIdentity(firstName, lastName, address, city, state, postalCode, country, dateOfBirth)"),
-        level = DeprecationLevel.WARNING
-    )
-    fun verifyIdentity(
-        firstName: String,
-        lastName: String,
-        address: String,
-        city: String?,
-        state: String?,
-        postalCode: String,
-        country: String,
-        dateOfBirth: String,
-        callback: (VerificationResult) -> Unit
-    )
-
-    /**
-     * Verifies an identity against the known public records and returns a result indicating whether or not the identity
-     * details provided was verified with enough confidence to grant the user access to Sudo platform functions such
-     * as provisioning a virtual card.
-     *
-     * @param firstName first name. Case insensitive.
-     * @param lastName last name. Case insensitive.
-     * @param address address. Case insensitive.
-     * @param city city. Case insensitive.
-     * @param state state. This is abbreviated name for the state, e.g. ‘NY’ not ‘New York’.
-     * @param postalCode postal code.
-     * @param country ISO 3166-1 alpha-2 country code. Must be one of countries retrieved via [getSupportedCountries] API.
+     * @param country ISO 3166-1 alpha-2 country code. Must be one of countries retrieved via [listSupportedCountries] API.
      * @param dateOfBirth date of birth formatted in "yyyy-MM-dd".
      * @return verification result.
      */
@@ -216,19 +127,6 @@ interface SudoIdentityVerificationClient {
         country: String,
         dateOfBirth: String
     ): VerifiedIdentity
-
-    /**
-     * Checks the identity verification status of the currently signed in user.
-     *
-     * @param option query option. See [QueryOption] enum.
-     * @param callback callback for returning verification result or error.
-     */
-    @Deprecated(
-        message = "This is deprecated and will be removed in the future.",
-        replaceWith = ReplaceWith("checkIdentityVerification(option)"),
-        level = DeprecationLevel.WARNING
-    )
-    fun checkIdentityVerification(option: QueryOption, callback: (VerificationResult) -> Unit)
 
     /**
      * Checks the identity verification status of the currently signed in user.
@@ -283,24 +181,7 @@ class DefaultSudoIdentityVerificationClient(
         )
     }
 
-    override fun getSupportedCountries(callback: (GetSupportedCountriesResult) -> Unit) {
-        CoroutineScope(IO).launch {
-            try {
-                val countries = this@DefaultSudoIdentityVerificationClient.getSupportedCountries()
-                callback(GetSupportedCountriesResult.Success(countries))
-            } catch (e: Throwable) {
-                callback(
-                    GetSupportedCountriesResult.Failure(
-                        this@DefaultSudoIdentityVerificationClient.toApiException(
-                            e
-                        )
-                    )
-                )
-            }
-        }
-    }
-
-    override suspend fun getSupportedCountries(): List<String> {
+    override suspend fun listSupportedCountries(): List<String> {
         this.logger.info("Retrieving the list of supports countries for identity verification.")
 
         if (!this.sudoUserClient.isSignedIn()) {
@@ -318,42 +199,6 @@ class DefaultSudoIdentityVerificationClient(
                 ?: listOf()
         } else {
             throw this.graphQLErrorToException(response.errors().first())
-        }
-    }
-
-    override fun verifyIdentity(
-        firstName: String,
-        lastName: String,
-        address: String,
-        city: String?,
-        state: String?,
-        postalCode: String,
-        country: String,
-        dateOfBirth: String,
-        callback: (VerificationResult) -> Unit
-    ) {
-        CoroutineScope(IO).launch {
-            try {
-                val verifiedIdentity = this@DefaultSudoIdentityVerificationClient.verifyIdentity(
-                    firstName,
-                    lastName,
-                    address,
-                    city,
-                    state,
-                    postalCode,
-                    country,
-                    dateOfBirth
-                )
-                callback(VerificationResult.Success(verifiedIdentity))
-            } catch (e: Throwable) {
-                callback(
-                    VerificationResult.Failure(
-                        this@DefaultSudoIdentityVerificationClient.toApiException(
-                            e
-                        )
-                    )
-                )
-            }
         }
     }
 
@@ -411,27 +256,6 @@ class DefaultSudoIdentityVerificationClient(
             }
         } else {
             throw this.graphQLErrorToException(response.errors().first())
-        }
-    }
-
-    override fun checkIdentityVerification(
-        option: QueryOption,
-        callback: (VerificationResult) -> Unit
-    ) {
-        CoroutineScope(IO).launch {
-            try {
-                val verifiedIdentity =
-                    this@DefaultSudoIdentityVerificationClient.checkIdentityVerification(option)
-                callback(VerificationResult.Success(verifiedIdentity))
-            } catch (e: Throwable) {
-                callback(
-                    VerificationResult.Failure(
-                        this@DefaultSudoIdentityVerificationClient.toApiException(
-                            e
-                        )
-                    )
-                )
-            }
         }
     }
 
@@ -495,21 +319,6 @@ class DefaultSudoIdentityVerificationClient(
             else -> {
                 SudoIdentityVerificationException.FailedException(message = "$error")
             }
-        }
-    }
-
-    private fun toApiException(e: Throwable): ApiException {
-        return when (e) {
-            is SudoIdentityVerificationException.InternalServerException -> {
-                ApiException(
-                    ApiErrorCode.SERVER_ERROR,
-                    e.message ?: "Internal server error occurred."
-                )
-            }
-            else -> ApiException(
-                ApiErrorCode.FATAL_ERROR,
-                e.message ?: "Unexpected error occurred."
-            )
         }
     }
 
