@@ -1,1 +1,1 @@
-sourceset_dependencies = '{":sudoidentityverification:dokkaHtml/debug": [], ":sudoidentityverification:dokkaHtml/main": [], ":sudoidentityverification:dokkaHtml/release": []}'
+sourceset_dependencies = '{":sudoidentityverification:dokkaHtml/androidTestRelease": [], ":sudoidentityverification:dokkaHtml/debug": [], ":sudoidentityverification:dokkaHtml/main": [], ":sudoidentityverification:dokkaHtml/release": []}'

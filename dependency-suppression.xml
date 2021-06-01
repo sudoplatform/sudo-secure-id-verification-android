@@ -6,15 +6,16 @@
             ]]></notes>
         <cve>CVE-2018-20200</cve>
     </suppress>
-    <suppress until="2020-10-12">
+    <suppress>
         <notes><![CDATA[
-            Kotlin script is not used in the Sudo Platform User SDK. Set suppression to expire in
-            2 months. We can re-evaluate and possible move to Kotlin 1.4.0 if it's out of RC by then.
+            False positive match on dokka.
             ]]></notes>
         <cve>CVE-2020-15824</cve>
     </suppress>
-    <suppress until="2020-10-12">
-        <notes>Kotlin analysis is only used during documentation generation</notes>
-        <cve>CVE-2015-5237</cve>
+    <suppress>
+        <notes><![CDATA[
+            False positive match on dokka.
+            ]]></notes>
+        <cve>CVE-2020-29582</cve>
     </suppress>
 </suppressions>
