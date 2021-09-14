@@ -7,6 +7,10 @@ apply plugin: 'org.sonarqube'
 apply plugin: 'jacoco'
 apply plugin: "org.owasp.dependencycheck"
 
+jacoco {
+    toolVersion = "0.8.7"
+}
+
 android {
     compileSdkVersion 30
 
@@ -57,7 +61,7 @@ android {
 }
 
 ext {
-    coroutine_version = '1.4.3-native-mt'
+    coroutine_version = '1.5.2-native-mt'
 }
 
 dependencies {
@@ -76,28 +80,26 @@ dependencies {
     testImplementation "com.amazonaws:aws-android-sdk-cognitoauth:$aws_version!!"
 
     // Sudo Platform SDKs.
-    androidTestImplementation 'com.sudoplatform:sudokeymanager:3.7.3'
-    implementation 'com.sudoplatform:sudologging:1.0.25'
+    androidTestImplementation 'com.sudoplatform:sudokeymanager:3.8.0'
+    implementation 'com.sudoplatform:sudologging:1.1.0'
 
-    implementation "com.sudoplatform:sudouser:9.3.5"
-    implementation "com.sudoplatform:sudoapiclient:2.0.4"
+    implementation "com.sudoplatform:sudouser:9.4.0"
+    implementation 'com.sudoplatform:sudoapiclient:2.1.0'
 
     // Utils
-    implementation "org.bouncycastle:bcpkix-jdk15to18:1.68"
+    implementation 'org.bouncycastle:bcpkix-jdk15to18:1.69'
 
     // Testing
     testImplementation 'junit:junit:4.13.2'
-    testImplementation 'org.mockito:mockito-core:3.10.0'
+    testImplementation 'org.mockito:mockito-core:3.12.4'
     testImplementation 'org.mockito.kotlin:mockito-kotlin:3.2.0'
     testImplementation 'org.powermock:powermock-module-junit4:2.0.9'
     testImplementation 'org.powermock:powermock-api-mockito2:2.0.9'
     testImplementation 'org.json:json:20210307'
 
-    androidTestImplementation 'androidx.test:runner:1.3.0'
-    androidTestImplementation 'androidx.test:rules:1.3.0'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
-    androidTestImplementation 'com.google.android.gms:play-services-safetynet:17.0.0'
-    androidTestImplementation 'com.google.android.gms:play-services-base:17.6.0'
+    androidTestImplementation 'androidx.test:runner:1.4.0'
+    androidTestImplementation 'androidx.test:rules:1.4.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
 }
 
 task jacocoTestReport(type: JacocoReport, dependsOn: "testDebugUnitTest") {
