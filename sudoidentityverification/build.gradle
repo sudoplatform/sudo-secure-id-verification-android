@@ -83,8 +83,8 @@ dependencies {
     androidTestImplementation 'com.sudoplatform:sudokeymanager:3.8.0'
     implementation 'com.sudoplatform:sudologging:1.1.0'
 
-    implementation "com.sudoplatform:sudouser:9.4.0"
-    implementation 'com.sudoplatform:sudoapiclient:2.1.0'
+    implementation "com.sudoplatform:sudouser:9.4.2"
+    implementation 'com.sudoplatform:sudoapiclient:2.1.2'
 
     // Utils
     implementation 'org.bouncycastle:bcpkix-jdk15to18:1.69'
