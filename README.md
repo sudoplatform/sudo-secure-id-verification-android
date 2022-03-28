@@ -8,8 +8,8 @@ Please see the [Sudo Platform Developer Docs](https://sudoplatform.com/docs) for
 ## Version Support
 | Technology             | Supported version |
 | ---------------------- | ----------------- |
-| Min. Deployment Target | 25                |
-| Kotlin version         | 1.3+              |
+| Min. Deployment Target | 23                |
+| Kotlin version         | 1.6+              |
 
 ## Integration Instructions
 Visit the [Secure ID Verification section](https://sudoplatform.com/docs) of the Sudo Platform Developer Docs for SDK integration instructions.

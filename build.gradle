@@ -1,23 +1,22 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
 buildscript {
-    ext.kotlin_version = '1.5.30'
-    ext.appsync_version = "3.1.1"
-    ext.aws_version = "2.16.12"
-    ext.dokka_version = "1.5.0"
+    ext.kotlin_version = "1.6.10"
+    ext.appsync_version = "3.3.0"
+    ext.aws_version = "2.42.0"
+    ext.dokka_version = "1.6.10"
 
     repositories {
         google()
         mavenCentral()
         maven { url = "https://plugins.gradle.org/m2/" }
-        jcenter()
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:4.2.2'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
-        classpath "org.owasp:dependency-check-gradle:6.3.1"
+        classpath "org.owasp:dependency-check-gradle:6.5.3"
         classpath "org.jetbrains.dokka:dokka-gradle-plugin:$dokka_version"
         classpath "com.amazonaws:aws-android-sdk-appsync-gradle-plugin:$appsync_version"
         classpath "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:3.3"
@@ -64,7 +63,6 @@ allprojects {
         mavenLocal()
         google()
         mavenCentral()
-        jcenter() // Needed for Dokka dependencies
         if (internalRepoUsername?.trim()) {
             maven {
                 name = internalSnapshotRepoName
