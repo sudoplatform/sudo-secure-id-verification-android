@@ -1,5 +1,5 @@
-/**
- * Copyright © 2020 Anonyome Labs, Inc. All rights reserved.
+/*
+ * Copyright © 2022 Anonyome Labs, Inc. All rights reserved.
  *
  * SPDX-License-Identifier: Apache-2.0
  */
@@ -9,8 +9,8 @@ package com.sudoplatform.sudoidentityverification
 /**
  * Defines the exceptions thrown by method of the [SudoIdentityVerificationClient].
  *
- * @property message Accompanying message for the exception.
- * @property cause The cause for the exception.
+ * @property message [String] Accompanying message for the exception.
+ * @property cause [Throwable] The cause for the exception.
  */
 sealed class SudoIdentityVerificationException(message: String? = null, cause: Throwable? = null) :  RuntimeException(message, cause) {
     /**

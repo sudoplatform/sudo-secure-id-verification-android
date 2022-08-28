@@ -28,11 +28,11 @@ import java.util.concurrent.CancellationException
 /**
  * Default implementation of the [SudoIdentityVerificationClient] interface.
  *
- * @property [Context] Application context.
- * @param sudoUserClient [SudoUserClient] Instance required to issue authentication tokens and perform
+ * @property context [Context] Application context.
+ * @property sudoUserClient [SudoUserClient] Instance required to issue authentication tokens and perform
  *  cryptographic operations.
- * @param logger [Logger] Logger used for logging messages.
- * @param graphQLClient [AWSAppSyncClient] Optional GraphQL client to use. Mainly used for unit testing.
+ * @property logger [Logger] Logger used for logging messages.
+ * @property graphQLClient [AWSAppSyncClient] Optional GraphQL client to use. Mainly used for unit testing.
  */
 class DefaultSudoIdentityVerificationClient(
     private val context: Context,

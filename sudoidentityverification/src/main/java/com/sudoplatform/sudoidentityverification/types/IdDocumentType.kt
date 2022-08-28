@@ -8,8 +8,6 @@ package com.sudoplatform.sudoidentityverification.types
 
 /**
  * Type of document used for identity verification.
- *
- * @since 2022-03-25
  */
 enum class IdDocumentType(val type: String) {
     DRIVER_LICENSE("driverLicense"),
