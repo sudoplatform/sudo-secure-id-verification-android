@@ -42,6 +42,9 @@
     <div>
     </div>
     <div class="pull-right d-flex">
+        <div class="filter-section" id="filter-section">
+                <button class="platform-tag platform-selector jvm-like" data-active="" data-filter=":sudoidentityverification:dokkaHtml/release">androidJvm</button>
+        </div>
         <button id="theme-toggle-button"><span id="theme-toggle"></span></button>
         <div id="searchBar"></div>
     </div>
@@ -51,119 +54,123 @@
         <div id="sideMenu"></div>
     </div>
     <div id="main">
-<div class="main-content" id="content" pageIds="sudoidentityverification::com.sudoplatform.sudoidentityverification.types/VerifiedIdentity///PointingToDeclaration//1162301176">
+<div class="main-content" data-page-type="classlike" id="content" pageIds="sudoidentityverification::com.sudoplatform.sudoidentityverification.types/VerifiedIdentity///PointingToDeclaration//1162301176">
   <div class="breadcrumbs"><a href="../../../index.html">sudoidentityverification</a><span class="delimiter">/</span><a href="../index.html">com.sudoplatform.sudoidentityverification.types</a><span class="delimiter">/</span><span class="current">VerifiedIdentity</span></div>
   <div class="cover ">
     <h1 class="cover"><span>Verified</span><wbr></wbr><span><span>Identity</span></span></h1>
     <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sudoidentityverification:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">data </span><span class="token keyword">class </span><a href="index.html">VerifiedIdentity</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span class="token keyword">val </span>owner<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>verified<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>verifiedAt<span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/java/util/Date.html">Date</a><span class="token operator">?</span><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>verificationMethod<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>canAttemptVerificationAgain<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>idScanUrl<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span></span></span><span class="token punctuation">)</span></div><p class="paragraph">Represents a verified identity resulting from calling SudoIdentityVerificationClient.verifyIdentity API.</p></div></div>
   </div>
   <div class="tabbedcontent">
-    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="Constructors">Constructors</button><button class="section-tab" data-togglable="Properties">Properties</button></div>
+    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,PROPERTY,FUNCTION">Members</button></div>
     <div class="tabs-section-body">
-      <h2 class="tabbedcontent">Constructors</h2>
-      <div class="table" data-togglable="Constructors"><a data-name="119162268%2FConstructors%2F1162301176" anchor-label="VerifiedIdentity" id="119162268%2FConstructors%2F1162301176" data-filterable-set=":sudoidentityverification:dokkaHtml/release"></a>
-        <div class="table-row" data-filterable-current=":sudoidentityverification:dokkaHtml/release" data-filterable-set=":sudoidentityverification:dokkaHtml/release">
-          <div class="main-subrow keyValue TabbedContent">
-            <div class=""><span class="inline-flex">
-                <div><a href="-verified-identity.html"><span>Verified</span><wbr></wbr><span><span>Identity</span></span></a></div>
+      <div data-togglable="CONSTRUCTOR">
+        <h2 class="">Constructors</h2>
+        <div class="table"><a data-name="119162268%2FConstructors%2F1162301176" anchor-label="VerifiedIdentity" id="119162268%2FConstructors%2F1162301176" data-filterable-set=":sudoidentityverification:dokkaHtml/release"></a>
+          <div class="table-row" data-togglable="CONSTRUCTOR" data-filterable-current=":sudoidentityverification:dokkaHtml/release" data-filterable-set=":sudoidentityverification:dokkaHtml/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-verified-identity.html"><span>Verified</span><wbr></wbr><span><span>Identity</span></span></a></div>
 <span class="anchor-wrapper"><span class="anchor-icon" pointing-to="119162268%2FConstructors%2F1162301176"></span>
-                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                </span></span></div>
-            <div>
-              <div class="title">
-                <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sudoidentityverification:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="-verified-identity.html"><span class="token function">VerifiedIdentity</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">owner<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">verified<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token punctuation">, </span></span><span class="parameter ">verifiedAt<span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/java/util/Date.html">Date</a><span class="token operator">?</span><span class="token punctuation">, </span></span><span class="parameter ">verificationMethod<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">canAttemptVerificationAgain<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token punctuation">, </span></span><span class="parameter ">idScanUrl<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span></span></span><span class="token punctuation">)</span></div></div></div>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sudoidentityverification:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">constructor</span><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">owner<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">verified<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token punctuation">, </span></span><span class="parameter ">verifiedAt<span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/java/util/Date.html">Date</a><span class="token operator">?</span><span class="token punctuation">, </span></span><span class="parameter ">verificationMethod<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">canAttemptVerificationAgain<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token punctuation">, </span></span><span class="parameter ">idScanUrl<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span></span></span><span class="token punctuation">)</span></div></div></div>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-      <h2 class="">Properties</h2>
-      <div class="table" data-togglable="Properties"><a data-name="500395425%2FProperties%2F1162301176" anchor-label="canAttemptVerificationAgain" id="500395425%2FProperties%2F1162301176" data-filterable-set=":sudoidentityverification:dokkaHtml/release"></a>
-        <div class="table-row" data-filterable-current=":sudoidentityverification:dokkaHtml/release" data-filterable-set=":sudoidentityverification:dokkaHtml/release">
-          <div class="main-subrow keyValue ">
-            <div class=""><span class="inline-flex">
-                <div><a href="can-attempt-verification-again.html"><span>can</span><wbr></wbr><span>Attempt</span><wbr></wbr><span>Verification</span><wbr></wbr><span><span>Again</span></span></a></div>
+      <div data-togglable="PROPERTY">
+        <h2 class="">Properties</h2>
+        <div class="table"><a data-name="500395425%2FProperties%2F1162301176" anchor-label="canAttemptVerificationAgain" id="500395425%2FProperties%2F1162301176" data-filterable-set=":sudoidentityverification:dokkaHtml/release"></a>
+          <div class="table-row" data-filterable-current=":sudoidentityverification:dokkaHtml/release" data-filterable-set=":sudoidentityverification:dokkaHtml/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="can-attempt-verification-again.html"><span>can</span><wbr></wbr><span>Attempt</span><wbr></wbr><span>Verification</span><wbr></wbr><span><span>Again</span></span></a></div>
 <span class="anchor-wrapper"><span class="anchor-icon" pointing-to="500395425%2FProperties%2F1162301176"></span>
-                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                </span></span></div>
-            <div>
-              <div class="title">
-                <div class="platform-hinted " data-platform-hinted="data-platform-hinted" data-togglable="Properties"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sudoidentityverification:dokkaHtml/release"><a data-name="500395425%2FProperties%2F1162301176" anchor-label="canAttemptVerificationAgain" id="500395425%2FProperties%2F1162301176" data-filterable-set=":sudoidentityverification:dokkaHtml/release"></a><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="can-attempt-verification-again.html">canAttemptVerificationAgain</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a></div><div class="brief "><a data-name="500395425%2FProperties%2F1162301176" anchor-label="canAttemptVerificationAgain" id="500395425%2FProperties%2F1162301176" data-filterable-set=":sudoidentityverification:dokkaHtml/release"></a><p class="paragraph"><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a> Indicates whether or not identity verification can be attempted again for this user. Set to false in cases where the maximum number of attempts has been reached or a finding from the identity verification attempt means that it should not proceed.</p></div></div></div>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sudoidentityverification:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="can-attempt-verification-again.html">canAttemptVerificationAgain</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a></div><div class="brief "><p class="paragraph"><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a> Indicates whether or not identity verification can be attempted again for this user. Set to false in cases where the maximum number of attempts has been reached or a finding from the identity verification attempt means that it should not proceed.</p></div></div></div>
+                </div>
               </div>
             </div>
           </div>
-        </div>
 <a data-name="1534778898%2FProperties%2F1162301176" anchor-label="idScanUrl" id="1534778898%2FProperties%2F1162301176" data-filterable-set=":sudoidentityverification:dokkaHtml/release"></a>
-        <div class="table-row" data-filterable-current=":sudoidentityverification:dokkaHtml/release" data-filterable-set=":sudoidentityverification:dokkaHtml/release">
-          <div class="main-subrow keyValue ">
-            <div class=""><span class="inline-flex">
-                <div><a href="id-scan-url.html"><span>id</span><wbr></wbr><span>Scan</span><wbr></wbr><span><span>Url</span></span></a></div>
+          <div class="table-row" data-filterable-current=":sudoidentityverification:dokkaHtml/release" data-filterable-set=":sudoidentityverification:dokkaHtml/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="id-scan-url.html"><span>id</span><wbr></wbr><span>Scan</span><wbr></wbr><span><span>Url</span></span></a></div>
 <span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1534778898%2FProperties%2F1162301176"></span>
-                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                </span></span></div>
-            <div>
-              <div class="title">
-                <div class="platform-hinted " data-platform-hinted="data-platform-hinted" data-togglable="Properties"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sudoidentityverification:dokkaHtml/release"><a data-name="1534778898%2FProperties%2F1162301176" anchor-label="idScanUrl" id="1534778898%2FProperties%2F1162301176" data-filterable-set=":sudoidentityverification:dokkaHtml/release"></a><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="id-scan-url.html">idScanUrl</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span></div><div class="brief "><a data-name="1534778898%2FProperties%2F1162301176" anchor-label="idScanUrl" id="1534778898%2FProperties%2F1162301176" data-filterable-set=":sudoidentityverification:dokkaHtml/release"></a><p class="paragraph"><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a> URL to upload the scanned documents for identity verification.</p></div></div></div>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sudoidentityverification:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="id-scan-url.html">idScanUrl</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span></div><div class="brief "><p class="paragraph"><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a> URL to upload the scanned documents for identity verification.</p></div></div></div>
+                </div>
               </div>
             </div>
           </div>
-        </div>
 <a data-name="-2000209674%2FProperties%2F1162301176" anchor-label="owner" id="-2000209674%2FProperties%2F1162301176" data-filterable-set=":sudoidentityverification:dokkaHtml/release"></a>
-        <div class="table-row" data-filterable-current=":sudoidentityverification:dokkaHtml/release" data-filterable-set=":sudoidentityverification:dokkaHtml/release">
-          <div class="main-subrow keyValue ">
-            <div class=""><span class="inline-flex">
-                <div><a href="owner.html"><span><span>owner</span></span></a></div>
+          <div class="table-row" data-filterable-current=":sudoidentityverification:dokkaHtml/release" data-filterable-set=":sudoidentityverification:dokkaHtml/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="owner.html"><span><span>owner</span></span></a></div>
 <span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-2000209674%2FProperties%2F1162301176"></span>
-                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                </span></span></div>
-            <div>
-              <div class="title">
-                <div class="platform-hinted " data-platform-hinted="data-platform-hinted" data-togglable="Properties"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sudoidentityverification:dokkaHtml/release"><a data-name="-2000209674%2FProperties%2F1162301176" anchor-label="owner" id="-2000209674%2FProperties%2F1162301176" data-filterable-set=":sudoidentityverification:dokkaHtml/release"></a><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="owner.html">owner</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></div><div class="brief "><a data-name="-2000209674%2FProperties%2F1162301176" anchor-label="owner" id="-2000209674%2FProperties%2F1162301176" data-filterable-set=":sudoidentityverification:dokkaHtml/release"></a><p class="paragraph"><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a> User ID of the user who provided identity details for verification.</p></div></div></div>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sudoidentityverification:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="owner.html">owner</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></div><div class="brief "><p class="paragraph"><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a> User ID of the user who provided identity details for verification.</p></div></div></div>
+                </div>
               </div>
             </div>
           </div>
-        </div>
 <a data-name="2066488149%2FProperties%2F1162301176" anchor-label="verificationMethod" id="2066488149%2FProperties%2F1162301176" data-filterable-set=":sudoidentityverification:dokkaHtml/release"></a>
-        <div class="table-row" data-filterable-current=":sudoidentityverification:dokkaHtml/release" data-filterable-set=":sudoidentityverification:dokkaHtml/release">
-          <div class="main-subrow keyValue ">
-            <div class=""><span class="inline-flex">
-                <div><a href="verification-method.html"><span>verification</span><wbr></wbr><span><span>Method</span></span></a></div>
+          <div class="table-row" data-filterable-current=":sudoidentityverification:dokkaHtml/release" data-filterable-set=":sudoidentityverification:dokkaHtml/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="verification-method.html"><span>verification</span><wbr></wbr><span><span>Method</span></span></a></div>
 <span class="anchor-wrapper"><span class="anchor-icon" pointing-to="2066488149%2FProperties%2F1162301176"></span>
-                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                </span></span></div>
-            <div>
-              <div class="title">
-                <div class="platform-hinted " data-platform-hinted="data-platform-hinted" data-togglable="Properties"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sudoidentityverification:dokkaHtml/release"><a data-name="2066488149%2FProperties%2F1162301176" anchor-label="verificationMethod" id="2066488149%2FProperties%2F1162301176" data-filterable-set=":sudoidentityverification:dokkaHtml/release"></a><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="verification-method.html">verificationMethod</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></div><div class="brief "><a data-name="2066488149%2FProperties%2F1162301176" anchor-label="verificationMethod" id="2066488149%2FProperties%2F1162301176" data-filterable-set=":sudoidentityverification:dokkaHtml/release"></a><p class="paragraph"><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a> Verification method used.</p></div></div></div>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sudoidentityverification:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="verification-method.html">verificationMethod</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></div><div class="brief "><p class="paragraph"><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a> Verification method used.</p></div></div></div>
+                </div>
               </div>
             </div>
           </div>
-        </div>
 <a data-name="-1005407767%2FProperties%2F1162301176" anchor-label="verified" id="-1005407767%2FProperties%2F1162301176" data-filterable-set=":sudoidentityverification:dokkaHtml/release"></a>
-        <div class="table-row" data-filterable-current=":sudoidentityverification:dokkaHtml/release" data-filterable-set=":sudoidentityverification:dokkaHtml/release">
-          <div class="main-subrow keyValue ">
-            <div class=""><span class="inline-flex">
-                <div><a href="verified.html"><span><span>verified</span></span></a></div>
+          <div class="table-row" data-filterable-current=":sudoidentityverification:dokkaHtml/release" data-filterable-set=":sudoidentityverification:dokkaHtml/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="verified.html"><span><span>verified</span></span></a></div>
 <span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1005407767%2FProperties%2F1162301176"></span>
-                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                </span></span></div>
-            <div>
-              <div class="title">
-                <div class="platform-hinted " data-platform-hinted="data-platform-hinted" data-togglable="Properties"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sudoidentityverification:dokkaHtml/release"><a data-name="-1005407767%2FProperties%2F1162301176" anchor-label="verified" id="-1005407767%2FProperties%2F1162301176" data-filterable-set=":sudoidentityverification:dokkaHtml/release"></a><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="verified.html">verified</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a></div><div class="brief "><a data-name="-1005407767%2FProperties%2F1162301176" anchor-label="verified" id="-1005407767%2FProperties%2F1162301176" data-filterable-set=":sudoidentityverification:dokkaHtml/release"></a><p class="paragraph"><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a> <code class="lang-kotlin">true</code> if the identity was verified successfully.</p></div></div></div>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sudoidentityverification:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="verified.html">verified</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a></div><div class="brief "><p class="paragraph"><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a> <code class="lang-kotlin">true</code> if the identity was verified successfully.</p></div></div></div>
+                </div>
               </div>
             </div>
           </div>
-        </div>
 <a data-name="-2053717514%2FProperties%2F1162301176" anchor-label="verifiedAt" id="-2053717514%2FProperties%2F1162301176" data-filterable-set=":sudoidentityverification:dokkaHtml/release"></a>
-        <div class="table-row" data-filterable-current=":sudoidentityverification:dokkaHtml/release" data-filterable-set=":sudoidentityverification:dokkaHtml/release">
-          <div class="main-subrow keyValue ">
-            <div class=""><span class="inline-flex">
-                <div><a href="verified-at.html"><span>verified</span><wbr></wbr><span><span>At</span></span></a></div>
+          <div class="table-row" data-filterable-current=":sudoidentityverification:dokkaHtml/release" data-filterable-set=":sudoidentityverification:dokkaHtml/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="verified-at.html"><span>verified</span><wbr></wbr><span><span>At</span></span></a></div>
 <span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-2053717514%2FProperties%2F1162301176"></span>
-                  <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                </span></span></div>
-            <div>
-              <div class="title">
-                <div class="platform-hinted " data-platform-hinted="data-platform-hinted" data-togglable="Properties"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sudoidentityverification:dokkaHtml/release"><a data-name="-2053717514%2FProperties%2F1162301176" anchor-label="verifiedAt" id="-2053717514%2FProperties%2F1162301176" data-filterable-set=":sudoidentityverification:dokkaHtml/release"></a><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="verified-at.html">verifiedAt</a><span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/java/util/Date.html">Date</a><span class="token operator">?</span></div><div class="brief "><a data-name="-2053717514%2FProperties%2F1162301176" anchor-label="verifiedAt" id="-2053717514%2FProperties%2F1162301176" data-filterable-set=":sudoidentityverification:dokkaHtml/release"></a><p class="paragraph"><a href="https://developer.android.com/reference/kotlin/java/util/Date.html">Date</a> Date and time at which the identity was verified.</p></div></div></div>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":sudoidentityverification:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="verified-at.html">verifiedAt</a><span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/java/util/Date.html">Date</a><span class="token operator">?</span></div><div class="brief "><p class="paragraph"><a href="https://developer.android.com/reference/kotlin/java/util/Date.html">Date</a> Date and time at which the identity was verified.</p></div></div></div>
+                </div>
               </div>
             </div>
           </div>

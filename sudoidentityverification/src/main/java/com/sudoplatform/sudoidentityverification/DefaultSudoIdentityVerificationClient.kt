@@ -58,7 +58,7 @@ class DefaultSudoIdentityVerificationClient(
         private const val ERROR_UNSUPPORTED_COUNTRY = "UnsupportedCountryError"
     }
 
-    override val version: String = "10.0.1"
+    override val version: String = "11.0.0"
 
     /**
      * GraphQL client used for calling Sudo service API.
