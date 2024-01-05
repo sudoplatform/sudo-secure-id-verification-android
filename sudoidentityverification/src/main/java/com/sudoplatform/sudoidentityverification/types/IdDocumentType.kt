@@ -13,5 +13,5 @@ enum class IdDocumentType(val type: String) {
     DRIVER_LICENSE("driverLicense"),
     PASSPORT("passport"),
     ID_CARD("idCard"),
-    UNKNOWN("Unknown")
+    UNKNOWN("Unknown"),
 }

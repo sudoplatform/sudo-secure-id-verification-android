@@ -9,11 +9,11 @@ package com.sudoplatform.sudoidentityverification
 import android.content.Context
 import com.amazonaws.mobileconnectors.appsync.AWSAppSyncClient
 import com.sudoplatform.sudoapiclient.ApiClientManager
-import com.sudoplatform.sudologging.Logger
-import com.sudoplatform.sudouser.SudoUserClient
 import com.sudoplatform.sudoidentityverification.types.VerifiedIdentity
 import com.sudoplatform.sudoidentityverification.types.inputs.VerifyIdentityDocumentInput
 import com.sudoplatform.sudoidentityverification.types.inputs.VerifyIdentityInput
+import com.sudoplatform.sudologging.Logger
+import com.sudoplatform.sudouser.SudoUserClient
 
 /**
  * Options for controlling the behaviour of query APIs.
@@ -27,7 +27,7 @@ enum class QueryOption {
     /**
      * Fetches result from the backend and ignores any cached entries.
      */
-    REMOTE_ONLY
+    REMOTE_ONLY,
 }
 
 /**
@@ -77,8 +77,8 @@ interface SudoIdentityVerificationClient {
                 this.logger ?: DefaultLogger.instance,
                 this.graphQLClient ?: ApiClientManager.getClient(
                     this.context,
-                    this.sudoUserClient
-                )
+                    this.sudoUserClient,
+                ),
             )
         }
     }

@@ -27,5 +27,5 @@ data class VerifyIdentityInput(
     val state: String? = null,
     val postalCode: String,
     val country: String,
-    val dateOfBirth: String
+    val dateOfBirth: String,
 )

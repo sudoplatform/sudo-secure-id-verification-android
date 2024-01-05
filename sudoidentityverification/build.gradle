@@ -16,15 +16,15 @@ node {
 }
 
 android {
-    compileSdkVersion 31
+    compileSdk 34
 
     namespace "com.sudoplatform.sudoidentityverification"
 
     defaultConfig {
         minSdkVersion 26
-        targetSdkVersion 31
+        targetSdkVersion 33
         versionCode 1
-        versionName "11.0.0"
+        versionName "13.0.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         testApplicationId = "com.sudoplatform.sudoidentityverification.test"
@@ -49,12 +49,12 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
 
     kotlinOptions {
-        jvmTarget = '1.8'
+        jvmTarget = JavaVersion.VERSION_17.toString()
     }
 
     publishing {
@@ -103,27 +103,27 @@ dependencies {
     implementation "com.amazonaws:aws-android-sdk-appsync:$appsync_version!!"
 
     // Sudo Platform SDKs.
-    implementation 'com.sudoplatform:sudologging:3.0.0'
-    implementation "com.sudoplatform:sudouser:17.0.0"
-    implementation 'com.sudoplatform:sudoapiclient:8.0.0'
+    implementation 'com.sudoplatform:sudologging:4.0.0'
+    implementation "com.sudoplatform:sudouser:18.0.0"
+    implementation 'com.sudoplatform:sudoapiclient:9.0.0'
 
     // Testing
     testImplementation 'junit:junit:4.13.2'
     testImplementation "io.kotlintest:kotlintest-assertions:3.4.2"
     testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutine_version"
     testImplementation "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
-    testImplementation 'org.mockito:mockito-core:4.7.0'
-    testImplementation 'org.mockito.kotlin:mockito-kotlin:4.1.0'
+    testImplementation 'org.mockito:mockito-core:5.5.0'
+    testImplementation 'org.mockito.kotlin:mockito-kotlin:5.1.0'
     testImplementation "androidx.test:core:1.5.0"
     testImplementation "com.jakewharton.timber:timber:5.0.1"
-    testImplementation 'org.json:json:20230618'
+    testImplementation 'org.json:json:20231013'
     testImplementation "com.amazonaws:aws-android-sdk-cognitoauth:$aws_version!!"
 
     androidTestImplementation 'androidx.test:runner:1.5.2'
     androidTestImplementation 'androidx.test:rules:1.5.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
 
-    androidTestImplementation 'com.sudoplatform:sudokeymanager:6.0.0'
+    androidTestImplementation 'com.sudoplatform:sudokeymanager:7.0.0'
 }
 
 task jacocoTestReport(type: JacocoReport, dependsOn: "testDebugUnitTest") {
@@ -235,6 +235,22 @@ task checkLicenseHaveRequiredFields {
     }
 }
 checkLicenses.finalizedBy checkLicenseHaveRequiredFields
+
+// Kotlin Lint
+apply plugin: 'org.jmailen.kotlinter'
+
+kotlinter {
+    ignoreFailures = false
+    reporters = ['checkstyle', 'plain']
+}
+
+// Sonarqube code analysis
+if (project.file("${rootProject.projectDir}/util/sonarqube.gradle").exists()) {
+    ext.sonarProjectKey = "sudo-identity-verification-android"
+    ext.sonarProjectName = "sudo-identity-verification-android"
+    ext.sonarExclusions = ["*.png", "*.jks", "*.json", "*.key"]
+    apply from: "${rootProject.projectDir}/util/sonarqube.gradle"
+}
 
 def props = new Properties()
 file("../secret.properties").withInputStream { props.load(it) }

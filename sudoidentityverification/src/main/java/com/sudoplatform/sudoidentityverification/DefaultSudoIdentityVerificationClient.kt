@@ -15,8 +15,6 @@ import com.apollographql.apollo.exception.ApolloException
 import com.sudoplatform.sudoapiclient.ApiClientManager
 import com.sudoplatform.sudoidentityverification.extensions.enqueue
 import com.sudoplatform.sudoidentityverification.extensions.enqueueFirst
-import com.sudoplatform.sudoidentityverification.type.VerifyIdentityDocumentInput as VerifyIdentityDocumentRequest
-import com.sudoplatform.sudoidentityverification.type.VerifyIdentityInput as VerifyIdentityRequest
 import com.sudoplatform.sudoidentityverification.types.VerifiedIdentity
 import com.sudoplatform.sudoidentityverification.types.inputs.VerifyIdentityDocumentInput
 import com.sudoplatform.sudoidentityverification.types.inputs.VerifyIdentityInput
@@ -24,6 +22,8 @@ import com.sudoplatform.sudologging.Logger
 import com.sudoplatform.sudouser.SudoUserClient
 import java.util.Date
 import java.util.concurrent.CancellationException
+import com.sudoplatform.sudoidentityverification.type.VerifyIdentityDocumentInput as VerifyIdentityDocumentRequest
+import com.sudoplatform.sudoidentityverification.type.VerifyIdentityInput as VerifyIdentityRequest
 
 /**
  * Default implementation of the [SudoIdentityVerificationClient] interface.
@@ -38,7 +38,7 @@ class DefaultSudoIdentityVerificationClient(
     private val context: Context,
     private val sudoUserClient: SudoUserClient,
     private val logger: Logger = DefaultLogger.instance,
-    graphQLClient: AWSAppSyncClient? = null
+    graphQLClient: AWSAppSyncClient? = null,
 ) : SudoIdentityVerificationClient {
 
     companion object {
@@ -58,7 +58,7 @@ class DefaultSudoIdentityVerificationClient(
         private const val ERROR_UNSUPPORTED_COUNTRY = "UnsupportedCountryError"
     }
 
-    override val version: String = "12.0.1"
+    override val version: String = "13.0.0"
 
     /**
      * GraphQL client used for calling Sudo service API.
@@ -69,7 +69,7 @@ class DefaultSudoIdentityVerificationClient(
         @Suppress("UNCHECKED_CAST")
         this.graphQLClient = graphQLClient ?: ApiClientManager.getClient(
             context,
-            this.sudoUserClient
+            this.sudoUserClient,
         )
     }
 
@@ -98,7 +98,7 @@ class DefaultSudoIdentityVerificationClient(
             logger.warning("unexpected error $e")
             when (e) {
                 is NotAuthorizedException -> throw SudoIdentityVerificationException.AuthenticationException(
-                    cause = e
+                    cause = e,
                 )
                 is ApolloException -> throw SudoIdentityVerificationException.FailedException(cause = e)
                 else -> throw interpretSudoIdentityVerificationException(e)
@@ -147,7 +147,7 @@ class DefaultSudoIdentityVerificationClient(
                     verifiedAt,
                     output.verificationMethod(),
                     output.canAttemptVerificationAgain(),
-                    output.idScanUrl()
+                    output.idScanUrl(),
                 )
             }
             throw SudoIdentityVerificationException.FailedException("Query succeeded but output was null.")
@@ -155,7 +155,7 @@ class DefaultSudoIdentityVerificationClient(
             logger.warning("unexpected error $e")
             when (e) {
                 is NotAuthorizedException -> throw SudoIdentityVerificationException.AuthenticationException(
-                    cause = e
+                    cause = e,
                 )
                 is ApolloException -> throw SudoIdentityVerificationException.FailedException(cause = e)
                 else -> throw interpretSudoIdentityVerificationException(e)
@@ -206,7 +206,7 @@ class DefaultSudoIdentityVerificationClient(
                     verifiedAt,
                     result.verificationMethod(),
                     result.canAttemptVerificationAgain(),
-                    result.idScanUrl()
+                    result.idScanUrl(),
                 )
             }
             throw SudoIdentityVerificationException.FailedException("Mutation succeeded but output was null.")
@@ -214,7 +214,7 @@ class DefaultSudoIdentityVerificationClient(
             logger.warning("unexpected error $e")
             when (e) {
                 is NotAuthorizedException -> throw SudoIdentityVerificationException.AuthenticationException(
-                    cause = e
+                    cause = e,
                 )
                 is ApolloException -> throw SudoIdentityVerificationException.FailedException(cause = e)
                 else -> throw interpretSudoIdentityVerificationException(e)
@@ -261,7 +261,7 @@ class DefaultSudoIdentityVerificationClient(
                     verifiedAt,
                     result.verificationMethod(),
                     result.canAttemptVerificationAgain(),
-                    result.idScanUrl()
+                    result.idScanUrl(),
                 )
             }
             throw SudoIdentityVerificationException.FailedException("Mutation succeeded but output was null.")
@@ -269,7 +269,7 @@ class DefaultSudoIdentityVerificationClient(
             logger.warning("unexpected error $e")
             when (e) {
                 is NotAuthorizedException -> throw SudoIdentityVerificationException.AuthenticationException(
-                    cause = e
+                    cause = e,
                 )
                 is ApolloException -> throw SudoIdentityVerificationException.FailedException(cause = e)
                 else -> throw interpretSudoIdentityVerificationException(e)
@@ -288,11 +288,11 @@ class DefaultSudoIdentityVerificationClient(
             return SudoIdentityVerificationException.InternalServerException(message = error)
         } else if (error.contains(ERROR_RECORD_NOT_FOUND)) {
             return SudoIdentityVerificationException.IdentityVerificationRecordNotFoundException(
-                message = error
+                message = error,
             )
         } else if (error.contains(ERROR_UPDATE_FAILED)) {
             return SudoIdentityVerificationException.IdentityVerificationUpdateFailedException(
-                message = error
+                message = error,
             )
         } else if (error.contains(ERROR_UNSUPPORTED_VERIFICATION_METHOD)) {
             return SudoIdentityVerificationException.UnsupportedVerificationMethodException(message = error)
@@ -309,7 +309,8 @@ class DefaultSudoIdentityVerificationClient(
     private fun interpretSudoIdentityVerificationException(e: Throwable): Throwable {
         return when (e) {
             is CancellationException,
-            is SudoIdentityVerificationException -> e
+            is SudoIdentityVerificationException,
+            -> e
             else -> SudoIdentityVerificationException.UnknownException(e)
         }
     }

@@ -12,7 +12,7 @@ package com.sudoplatform.sudoidentityverification
  * @property message [String] Accompanying message for the exception.
  * @property cause [Throwable] The cause for the exception.
  */
-sealed class SudoIdentityVerificationException(message: String? = null, cause: Throwable? = null) :  RuntimeException(message, cause) {
+sealed class SudoIdentityVerificationException(message: String? = null, cause: Throwable? = null) : RuntimeException(message, cause) {
     /**
      * The Verified Identity cannot be found.
      * The Verified Identity attempted to be accessed does not exist or cannot be found.

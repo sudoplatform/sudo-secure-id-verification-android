@@ -20,5 +20,5 @@ data class VerifyIdentityDocumentInput(
     val imageBase64: String,
     val backImageBase64: String,
     val country: String,
-    val documentType: IdDocumentType
+    val documentType: IdDocumentType,
 )
