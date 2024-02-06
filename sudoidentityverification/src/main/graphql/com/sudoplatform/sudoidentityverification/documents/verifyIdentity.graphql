@@ -1,0 +1,5 @@
+mutation VerifyIdentity($input: VerifyIdentityInput) {
+  verifyIdentity(input: $input) {
+    ...VerifiedIdentity
+  }
+}

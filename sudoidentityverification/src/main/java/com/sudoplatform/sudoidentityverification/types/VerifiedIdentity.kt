@@ -14,7 +14,7 @@ import java.util.Date
  * @property owner [String] User ID of the user who provided identity details for verification.
  * @property verified [Boolean] `true` if the identity was verified successfully.
  * @property verifiedAt [Date] Date and time at which the identity was verified.
- * @property verificationMethod [String] Verification method used.
+ * @property verificationMethod [VerificationMethod] Verification method used.
  * @property canAttemptVerificationAgain [Boolean] Indicates whether or not identity verification
  *  can be attempted again for this user. Set to false in cases where the maximum number of attempts
  *  has been reached or a finding from the identity verification attempt means that it should not
@@ -25,7 +25,10 @@ data class VerifiedIdentity(
     val owner: String,
     val verified: Boolean,
     val verifiedAt: Date?,
-    val verificationMethod: String,
+    val verificationMethod: VerificationMethod,
     val canAttemptVerificationAgain: Boolean,
     val idScanUrl: String?,
+    val requiredVerificationMethod: VerificationMethod?,
+    val acceptableDocumentTypes: List<IdDocumentType>,
+    val documentVerificationStatus: DocumentVerificationStatus,
 )

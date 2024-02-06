@@ -1,0 +1,9 @@
+overwrite: true
+schema:
+  - "./schema/*.graphql"
+documents:
+  - "../sudoidentityverification/src/main/graphql/com/sudoplatform/sudoidentityverification/documents/**/*.graphql"
+generates:
+  "../sudoidentityverification/src/main/graphql/com/sudoplatform/sudoidentityverification/schema.json":
+    plugins:
+      - introspection

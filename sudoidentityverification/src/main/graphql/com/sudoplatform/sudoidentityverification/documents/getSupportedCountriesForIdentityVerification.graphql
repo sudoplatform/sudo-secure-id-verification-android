@@ -1,0 +1,5 @@
+query GetSupportedCountriesForIdentityVerification {
+  getSupportedCountriesForIdentityVerification {
+    countryList
+  }
+}

@@ -13,14 +13,18 @@ import com.amazonaws.services.cognitoidentity.model.NotAuthorizedException
 import com.apollographql.apollo.api.Error
 import com.apollographql.apollo.exception.ApolloException
 import com.sudoplatform.sudoapiclient.ApiClientManager
+import com.sudoplatform.sudoidentityverification.documents.CheckIdentityVerificationQuery
+import com.sudoplatform.sudoidentityverification.documents.GetSupportedCountriesForIdentityVerificationQuery
+import com.sudoplatform.sudoidentityverification.documents.VerifyIdentityDocumentMutation
+import com.sudoplatform.sudoidentityverification.documents.VerifyIdentityMutation
 import com.sudoplatform.sudoidentityverification.extensions.enqueue
 import com.sudoplatform.sudoidentityverification.extensions.enqueueFirst
 import com.sudoplatform.sudoidentityverification.types.VerifiedIdentity
+import com.sudoplatform.sudoidentityverification.types.VerifiedIdentityTransformer
 import com.sudoplatform.sudoidentityverification.types.inputs.VerifyIdentityDocumentInput
 import com.sudoplatform.sudoidentityverification.types.inputs.VerifyIdentityInput
 import com.sudoplatform.sudologging.Logger
 import com.sudoplatform.sudouser.SudoUserClient
-import java.util.Date
 import java.util.concurrent.CancellationException
 import com.sudoplatform.sudoidentityverification.type.VerifyIdentityDocumentInput as VerifyIdentityDocumentRequest
 import com.sudoplatform.sudoidentityverification.type.VerifyIdentityInput as VerifyIdentityRequest
@@ -66,7 +70,6 @@ class DefaultSudoIdentityVerificationClient(
     private val graphQLClient: AWSAppSyncClient
 
     init {
-        @Suppress("UNCHECKED_CAST")
         this.graphQLClient = graphQLClient ?: ApiClientManager.getClient(
             context,
             this.sudoUserClient,
@@ -134,21 +137,9 @@ class DefaultSudoIdentityVerificationClient(
                 logger.warning("errors = ${response.errors()}")
                 throw interpretSudoIdentityVerificationError(response.errors().first())
             }
-            val output = response.data()?.checkIdentityVerification()
-            output?.let {
-                var verifiedAt: Date? = null
-                val verifiedAtEpochMs = output.verifiedAtEpochMs()
-                if (verifiedAtEpochMs != null) {
-                    verifiedAt = Date(verifiedAtEpochMs.toLong())
-                }
-                return VerifiedIdentity(
-                    output.owner(),
-                    output.verified(),
-                    verifiedAt,
-                    output.verificationMethod(),
-                    output.canAttemptVerificationAgain(),
-                    output.idScanUrl(),
-                )
+            val result = response.data()?.checkIdentityVerification()?.fragments()?.verifiedIdentity()
+            result?.let {
+                return VerifiedIdentityTransformer.toEntity(result)
             }
             throw SudoIdentityVerificationException.FailedException("Query succeeded but output was null.")
         } catch (e: Throwable) {
@@ -193,21 +184,9 @@ class DefaultSudoIdentityVerificationClient(
                 logger.warning("errors = ${response.errors()}")
                 throw interpretSudoIdentityVerificationError(response.errors().first())
             }
-            val result = response.data()?.verifyIdentity()
+            val result = response.data()?.verifyIdentity()?.fragments()?.verifiedIdentity()
             result?.let {
-                var verifiedAt: Date? = null
-                val verifiedAtEpochMs = result.verifiedAtEpochMs()
-                if (verifiedAtEpochMs != null) {
-                    verifiedAt = Date(verifiedAtEpochMs.toLong())
-                }
-                return VerifiedIdentity(
-                    result.owner(),
-                    result.verified(),
-                    verifiedAt,
-                    result.verificationMethod(),
-                    result.canAttemptVerificationAgain(),
-                    result.idScanUrl(),
-                )
+                return VerifiedIdentityTransformer.toEntity(result)
             }
             throw SudoIdentityVerificationException.FailedException("Mutation succeeded but output was null.")
         } catch (e: Throwable) {
@@ -248,21 +227,9 @@ class DefaultSudoIdentityVerificationClient(
                 logger.warning("errors = ${response.errors()}")
                 throw interpretSudoIdentityVerificationError(response.errors().first())
             }
-            val result = response.data()?.verifyIdentityDocument()
+            val result = response.data()?.verifyIdentityDocument()?.fragments()?.verifiedIdentity()
             result?.let {
-                var verifiedAt: Date? = null
-                val verifiedAtEpochMs = result.verifiedAtEpochMs()
-                if (verifiedAtEpochMs != null) {
-                    verifiedAt = Date(verifiedAtEpochMs.toLong())
-                }
-                return VerifiedIdentity(
-                    result.owner(),
-                    result.verified(),
-                    verifiedAt,
-                    result.verificationMethod(),
-                    result.canAttemptVerificationAgain(),
-                    result.idScanUrl(),
-                )
+                return VerifiedIdentityTransformer.toEntity(result)
             }
             throw SudoIdentityVerificationException.FailedException("Mutation succeeded but output was null.")
         } catch (e: Throwable) {

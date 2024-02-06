@@ -1,0 +1,49 @@
+type VerifiedIdentity @aws_cognito_user_pools {
+  owner: String!
+  verified: Boolean!
+  verifiedAtEpochMs: Float
+  verificationMethod: String!
+  canAttemptVerificationAgain: Boolean!
+  idScanUrl: String
+  requiredVerificationMethod: String
+  acceptableDocumentTypes: [String!]!
+  documentVerificationStatus: String!
+}
+
+input VerifyIdentityInput {
+  verificationMethod: String!
+  firstName: String!
+  lastName: String!
+  address: String!
+  city: String
+  state: String
+  postalCode: String!
+  country: String!
+  dateOfBirth: String!
+}
+
+input VerifyIdentityDocumentInput {
+  verificationMethod: String!
+  imageBase64: String!
+  backImageBase64: String!
+  country: String!
+  documentType: String!
+}
+
+type SupportedCountries @aws_cognito_user_pools {
+  countryList: [String!]!
+}
+
+type Mutation {
+  verifyIdentity(input: VerifyIdentityInput): VerifiedIdentity
+    @aws_cognito_user_pools
+  verifyIdentityDocument(input: VerifyIdentityDocumentInput): VerifiedIdentity
+    @aws_cognito_user_pools
+}
+
+type Query {
+  checkIdentityVerification: VerifiedIdentity @aws_cognito_user_pools
+  getSupportedCountries: SupportedCountries @aws_cognito_user_pools
+  getSupportedCountriesForIdentityVerification: SupportedCountries
+    @aws_cognito_user_pools
+}

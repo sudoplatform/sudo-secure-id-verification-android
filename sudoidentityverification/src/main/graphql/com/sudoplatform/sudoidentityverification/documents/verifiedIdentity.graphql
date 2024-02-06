@@ -1,0 +1,11 @@
+fragment VerifiedIdentity on VerifiedIdentity {
+  owner
+  verified
+  verifiedAtEpochMs
+  verificationMethod
+  canAttemptVerificationAgain
+  idScanUrl
+  requiredVerificationMethod
+  acceptableDocumentTypes
+  documentVerificationStatus
+}

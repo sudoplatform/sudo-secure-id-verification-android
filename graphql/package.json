@@ -1,0 +1,21 @@
+{
+  "name": "@sudoplatform/internal-sudoidentityverification-codegen",
+  "version": "0.0.1",
+  "author": "Anonyome Labs, Inc.",
+  "license": "Apache-2.0",
+  "scripts": {
+    "codegen": "graphql-codegen -c codegen.yml"
+  },
+  "engines": {
+    "node": ">=18 <19"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.0.0-0",
+    "@graphql-codegen/add": "^5.0.0",
+    "@graphql-codegen/cli": "^5.0.0",
+    "@graphql-codegen/introspection": "^4.0.0",
+    "@types/node": "^18.19.10",
+    "graphql": "^16.8.1",
+    "typescript": "^5.3.3"
+  }
+}

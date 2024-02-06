@@ -1,0 +1,5 @@
+query CheckIdentityVerification {
+  checkIdentityVerification {
+    ...VerifiedIdentity
+  }
+}
