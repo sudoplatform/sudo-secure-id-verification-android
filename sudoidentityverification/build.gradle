@@ -285,4 +285,5 @@ tasks.register('copyIntegrationTestData', Copy) {
 
 afterEvaluate {
     packageDebugAssets.dependsOn 'copyIntegrationTestData'
+    mergeDebugAssets.dependsOn 'copyIntegrationTestData'
 }

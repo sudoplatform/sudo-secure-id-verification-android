@@ -60,6 +60,7 @@ class DefaultSudoIdentityVerificationClient(
         private const val ERROR_IMPLAUSIBLE_AGE = "ImplausibleAgeError"
         private const val ERROR_INVALID_AGE = "InvalidAgeError"
         private const val ERROR_UNSUPPORTED_COUNTRY = "UnsupportedCountryError"
+        private const val ERROR_UNSUPPORTED_NETWORK_LOCATION = "UnsupportedNetworkLocationError"
     }
 
     override val version: String = "13.0.0"
@@ -269,6 +270,8 @@ class DefaultSudoIdentityVerificationClient(
             return SudoIdentityVerificationException.InvalidAgeException(message = error)
         } else if (error.contains(ERROR_UNSUPPORTED_COUNTRY)) {
             return SudoIdentityVerificationException.UnsupportedCountryException(message = error)
+        } else if (error.contains(ERROR_UNSUPPORTED_NETWORK_LOCATION)) {
+            return SudoIdentityVerificationException.UnsupportedNetworkLocationException(message = error)
         }
         return SudoIdentityVerificationException.FailedException(e.toString())
     }
