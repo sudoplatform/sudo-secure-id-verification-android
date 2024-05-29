@@ -51,6 +51,12 @@ sealed class SudoIdentityVerificationException(message: String? = null, cause: T
         SudoIdentityVerificationException(message = message, cause = cause)
 
     /**
+     * An identity verification attempt was initiated with insufficient information.
+     */
+    class RequiredIdentityInformationNotProvidedException(message: String? = null, cause: Throwable? = null) :
+        SudoIdentityVerificationException(message = message, cause = cause)
+
+    /**
      * An identity verification attempt originated from an unsupported network location.
      */
     class UnsupportedNetworkLocationException(message: String? = null, cause: Throwable? = null) :

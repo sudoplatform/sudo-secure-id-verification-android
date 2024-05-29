@@ -84,7 +84,7 @@ interface SudoIdentityVerificationClient {
     }
 
     /**
-     * Checksum's for each file are generated and are used to create a checksum that is used when publishing to maven central.
+     * Checksums for each file are generated and are used to create a checksum that is used when publishing to maven central.
      * In order to retry a failed publish without needing to change any functionality, we need a way to generate a different checksum
      * for the source code.  We can change the value of this property which will generate a different checksum for publishing
      * and allow us to retry.  The value of `version` doesn't need to be kept up-to-date with the version of the code.
@@ -102,6 +102,17 @@ interface SudoIdentityVerificationClient {
     suspend fun listSupportedCountries(): List<String>
 
     /**
+     * Retrieves a flag indicating if face image must be submitted with identity
+     * documents.
+     *
+     * @return boolean flag.
+     *
+     * @throws [SudoIdentityVerificationException].
+     */
+    @Throws(SudoIdentityVerificationException::class)
+    suspend fun isFaceImageRequired(): Boolean
+
+    /**
      * Checks the identity verification status of the currently signed in user.
      *
      * @param option [QueryOption] query option.
@@ -115,7 +126,7 @@ interface SudoIdentityVerificationClient {
     /**
      * Verifies an identity against the known public records and returns a result indicating whether
      * or not the identity details provided was verified with enough confidence to grant the user
-     * access to Sudo platform functions such as provisioning a virtual card.
+     * access to Sudo Platform functions such as provisioning a virtual card.
      *
      * @param input [VerifyIdentityInput] Parameters consisting of personally identifiable
      *  information required to verify an identity.

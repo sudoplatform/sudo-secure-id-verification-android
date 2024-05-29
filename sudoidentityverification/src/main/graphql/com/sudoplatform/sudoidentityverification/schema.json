@@ -30,6 +30,57 @@
       },
       {
         "kind": "OBJECT",
+        "name": "IdentityVerificationCapabilities",
+        "description": null,
+        "fields": [
+          {
+            "name": "faceImageRequiredWithDocument",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Boolean",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "supportedCountries",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "String",
+                    "ofType": null
+                  }
+                }
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ],
+        "inputFields": null,
+        "interfaces": [],
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
         "name": "Mutation",
         "description": null,
         "fields": [
@@ -107,12 +158,12 @@
             "deprecationReason": null
           },
           {
-            "name": "getSupportedCountries",
+            "name": "getIdentityVerificationCapabilities",
             "description": null,
             "args": [],
             "type": {
               "kind": "OBJECT",
-              "name": "SupportedCountries",
+              "name": "IdentityVerificationCapabilities",
               "ofType": null
             },
             "isDeprecated": false,
@@ -381,6 +432,18 @@
                 "name": "String",
                 "ofType": null
               }
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "faceImageBase64",
+            "description": null,
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
             },
             "defaultValue": null,
             "isDeprecated": false,

@@ -26,12 +26,14 @@ input VerifyIdentityDocumentInput {
   verificationMethod: String!
   imageBase64: String!
   backImageBase64: String!
+  faceImageBase64: String
   country: String!
   documentType: String!
 }
 
-type SupportedCountries @aws_cognito_user_pools {
-  countryList: [String!]!
+type IdentityVerificationCapabilities @aws_cognito_user_pools {
+  supportedCountries: [String!]!
+  faceImageRequiredWithDocument: Boolean!
 }
 
 type Mutation {
@@ -43,7 +45,6 @@ type Mutation {
 
 type Query {
   checkIdentityVerification: VerifiedIdentity @aws_cognito_user_pools
-  getSupportedCountries: SupportedCountries @aws_cognito_user_pools
-  getSupportedCountriesForIdentityVerification: SupportedCountries
+  getIdentityVerificationCapabilities: IdentityVerificationCapabilities
     @aws_cognito_user_pools
 }

@@ -14,7 +14,7 @@ import com.apollographql.apollo.api.Error
 import com.apollographql.apollo.exception.ApolloException
 import com.sudoplatform.sudoapiclient.ApiClientManager
 import com.sudoplatform.sudoidentityverification.documents.CheckIdentityVerificationQuery
-import com.sudoplatform.sudoidentityverification.documents.GetSupportedCountriesForIdentityVerificationQuery
+import com.sudoplatform.sudoidentityverification.documents.GetIdentityVerificationCapabilitiesQuery
 import com.sudoplatform.sudoidentityverification.documents.VerifyIdentityDocumentMutation
 import com.sudoplatform.sudoidentityverification.documents.VerifyIdentityMutation
 import com.sudoplatform.sudoidentityverification.extensions.enqueue
@@ -61,6 +61,7 @@ class DefaultSudoIdentityVerificationClient(
         private const val ERROR_INVALID_AGE = "InvalidAgeError"
         private const val ERROR_UNSUPPORTED_COUNTRY = "UnsupportedCountryError"
         private const val ERROR_UNSUPPORTED_NETWORK_LOCATION = "UnsupportedNetworkLocationError"
+        private const val ERROR_REQUIRED_IDENTITY_INFORMATION_NOT_PROVIDED = "RequiredIdentityInformationNotProvidedError"
     }
 
     override val version: String = "13.0.0"
@@ -78,14 +79,14 @@ class DefaultSudoIdentityVerificationClient(
     }
 
     override suspend fun listSupportedCountries(): List<String> {
-        this.logger.info("Retrieving the list of supports countries for identity verification.")
+        this.logger.info("Retrieving the list of supported countries for identity verification.")
 
         if (!this.sudoUserClient.isSignedIn()) {
             throw SudoIdentityVerificationException.NotSignedInException()
         }
 
         try {
-            val query = GetSupportedCountriesForIdentityVerificationQuery.builder()
+            val query = GetIdentityVerificationCapabilitiesQuery.builder()
                 .build()
 
             val response = this.graphQLClient.query(query)
@@ -96,8 +97,41 @@ class DefaultSudoIdentityVerificationClient(
                 throw interpretSudoIdentityVerificationError(response.errors().first())
             }
 
-            return response.data()?.supportedCountriesForIdentityVerification?.countryList()
+            return response.data()?.identityVerificationCapabilities?.supportedCountries()
                 ?: listOf()
+        } catch (e: Throwable) {
+            logger.warning("unexpected error $e")
+            when (e) {
+                is NotAuthorizedException -> throw SudoIdentityVerificationException.AuthenticationException(
+                    cause = e,
+                )
+                is ApolloException -> throw SudoIdentityVerificationException.FailedException(cause = e)
+                else -> throw interpretSudoIdentityVerificationException(e)
+            }
+        }
+    }
+
+    override suspend fun isFaceImageRequired(): Boolean {
+        this.logger.info("Retrieving the flag indicating if face images need to be provided with ID document verification.")
+
+        if (!this.sudoUserClient.isSignedIn()) {
+            throw SudoIdentityVerificationException.NotSignedInException()
+        }
+
+        try {
+            val query = GetIdentityVerificationCapabilitiesQuery.builder()
+                .build()
+
+            val response = this.graphQLClient.query(query)
+                .enqueueFirst()
+
+            if (response.hasErrors()) {
+                logger.warning("errors = ${response.errors()}")
+                throw interpretSudoIdentityVerificationError(response.errors().first())
+            }
+
+            return response.data()?.identityVerificationCapabilities?.faceImageRequiredWithDocument()
+                ?: false
         } catch (e: Throwable) {
             logger.warning("unexpected error $e")
             when (e) {
@@ -214,6 +248,7 @@ class DefaultSudoIdentityVerificationClient(
                 .verificationMethod(GOVERNMENT_ID)
                 .imageBase64(input.imageBase64)
                 .backImageBase64(input.backImageBase64)
+                .faceImageBase64(input.faceImageBase64)
                 .country(input.country)
                 .documentType(input.documentType.type)
                 .build()
@@ -272,6 +307,8 @@ class DefaultSudoIdentityVerificationClient(
             return SudoIdentityVerificationException.UnsupportedCountryException(message = error)
         } else if (error.contains(ERROR_UNSUPPORTED_NETWORK_LOCATION)) {
             return SudoIdentityVerificationException.UnsupportedNetworkLocationException(message = error)
+        } else if (error.contains(ERROR_REQUIRED_IDENTITY_INFORMATION_NOT_PROVIDED)) {
+            return SudoIdentityVerificationException.RequiredIdentityInformationNotProvidedException(message = error)
         }
         return SudoIdentityVerificationException.FailedException(e.toString())
     }
