@@ -3,9 +3,12 @@
 ## Overview
 The Sudo Platform makes it seamless for developers to integrate Sudo capabilities into their existing applications with minimal effort.
 
+Sudo Secure ID Verification Android SDK helps developers verify the legal identity of individuals from their personal data and images of government issued documents.
+
 Please see the [Sudo Platform Developer Docs](https://sudoplatform.com/docs) for an overview of Secure ID Verification in the Sudo Platform.
 
 ## Version Support
+
 | Technology             | Supported version |
 | ---------------------- | ----------------- |
 | Min. Deployment Target | 26                |
