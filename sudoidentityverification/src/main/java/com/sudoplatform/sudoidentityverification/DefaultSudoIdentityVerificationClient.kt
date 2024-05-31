@@ -64,7 +64,7 @@ class DefaultSudoIdentityVerificationClient(
         private const val ERROR_REQUIRED_IDENTITY_INFORMATION_NOT_PROVIDED = "RequiredIdentityInformationNotProvidedError"
     }
 
-    override val version: String = "14.2.1"
+    override val version: String = "14.2.2"
 
     /**
      * GraphQL client used for calling Sudo service API.
