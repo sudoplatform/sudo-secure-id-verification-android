@@ -150,6 +150,19 @@ interface SudoIdentityVerificationClient {
     suspend fun verifyIdentityDocument(input: VerifyIdentityDocumentInput): VerifiedIdentity
 
     /**
+     * Attempts to capture an identity document and verify identity using the information in
+     * the provided identity documents.
+     *
+     * @param input [VerifyIdentityDocumentInput] Parameters used to verify an identity using
+     *  provided identity documents.
+     * @return A [VerifiedIdentity] verification result.
+     *
+     * @throws [SudoIdentityVerificationException].
+     */
+    @Throws(SudoIdentityVerificationException::class)
+    suspend fun captureAndVerifyIdentityDocument(input: VerifyIdentityDocumentInput): VerifiedIdentity
+
+    /**
      * Reset any internal state and cached content.
      */
     fun reset()

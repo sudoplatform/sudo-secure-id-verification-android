@@ -41,6 +41,8 @@ type Mutation {
     @aws_cognito_user_pools
   verifyIdentityDocument(input: VerifyIdentityDocumentInput): VerifiedIdentity
     @aws_cognito_user_pools
+  captureAndVerifyIdentityDocument(input: VerifyIdentityDocumentInput): VerifiedIdentity
+    @aws_cognito_user_pools
 }
 
 type Query {

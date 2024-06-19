@@ -13,6 +13,7 @@ import com.amazonaws.services.cognitoidentity.model.NotAuthorizedException
 import com.apollographql.apollo.api.Error
 import com.apollographql.apollo.exception.ApolloException
 import com.sudoplatform.sudoapiclient.ApiClientManager
+import com.sudoplatform.sudoidentityverification.documents.CaptureAndVerifyIdentityDocumentMutation
 import com.sudoplatform.sudoidentityverification.documents.CheckIdentityVerificationQuery
 import com.sudoplatform.sudoidentityverification.documents.GetIdentityVerificationCapabilitiesQuery
 import com.sudoplatform.sudoidentityverification.documents.VerifyIdentityDocumentMutation
@@ -264,6 +265,50 @@ class DefaultSudoIdentityVerificationClient(
                 throw interpretSudoIdentityVerificationError(response.errors().first())
             }
             val result = response.data()?.verifyIdentityDocument()?.fragments()?.verifiedIdentity()
+            result?.let {
+                return VerifiedIdentityTransformer.toEntity(result)
+            }
+            throw SudoIdentityVerificationException.FailedException("Mutation succeeded but output was null.")
+        } catch (e: Throwable) {
+            logger.warning("unexpected error $e")
+            when (e) {
+                is NotAuthorizedException -> throw SudoIdentityVerificationException.AuthenticationException(
+                    cause = e,
+                )
+                is ApolloException -> throw SudoIdentityVerificationException.FailedException(cause = e)
+                else -> throw interpretSudoIdentityVerificationException(e)
+            }
+        }
+    }
+
+    override suspend fun captureAndVerifyIdentityDocument(input: VerifyIdentityDocumentInput): VerifiedIdentity {
+        this.logger.info("Capturing and verifying identity document.")
+
+        if (!this.sudoUserClient.isSignedIn()) {
+            throw SudoIdentityVerificationException.NotSignedInException()
+        }
+
+        try {
+            val mutationInput = VerifyIdentityDocumentRequest.builder()
+                .verificationMethod(GOVERNMENT_ID)
+                .imageBase64(input.imageBase64)
+                .backImageBase64(input.backImageBase64)
+                .faceImageBase64(input.faceImageBase64)
+                .country(input.country)
+                .documentType(input.documentType.type)
+                .build()
+            val mutation = CaptureAndVerifyIdentityDocumentMutation.builder()
+                .input(mutationInput)
+                .build()
+
+            val response = this.graphQLClient.mutate(mutation)
+                .enqueue()
+
+            if (response.hasErrors()) {
+                logger.warning("errors = ${response.errors()}")
+                throw interpretSudoIdentityVerificationError(response.errors().first())
+            }
+            val result = response.data()?.captureAndVerifyIdentityDocument()?.fragments()?.verifiedIdentity()
             result?.let {
                 return VerifiedIdentityTransformer.toEntity(result)
             }
