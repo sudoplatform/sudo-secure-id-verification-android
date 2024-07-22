@@ -1,0 +1,3 @@
+[submodule "sudo-identity-verification-test-data"]
+	path = sudo-identity-verification-test-data
+	url = https://gitlab.tools.anonyome.com/platform/identity-verification/sudo-identity-verification-test-data.git
