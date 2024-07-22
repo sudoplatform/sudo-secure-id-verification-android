@@ -11,7 +11,7 @@ Please see the [Sudo Platform Developer Docs](https://sudoplatform.com/docs) for
 
 | Technology             | Supported version |
 | ---------------------- | ----------------- |
-| Min. Deployment Target | 26                |
+| Min. API Level         | 26                |
 | Kotlin version         | 1.9+              |
 
 ## Integration Instructions

@@ -268,12 +268,6 @@
   license: Amazon Software License
   licenseUrl: https://aws.amazon.com/asl/
   url: https://github.com/aws/aws-sdk-android
-- artifact: com.amazonaws:aws-android-sdk-cognitoauth:+
-  name: AWS SDK for Android - Amazon Cognito Auth
-  copyrightHolder: Amazon
-  license: Apache License, Version 2.0
-  licenseUrl: http://aws.amazon.com/apache2.0
-  url: http://aws.amazon.com/sdkforandroid
 - artifact: androidx.browser:browser:+
   name: Android Support Custom Tabs
   copyrightHolder: Google, Inc.
@@ -303,11 +297,6 @@
   license: Bouncy Castle Licence
   licenseUrl: http://www.bouncycastle.org/licence.html
   url: http://rtyley.github.io/spongycastle/
-- artifact: com.google.guava:listenablefuture:+
-  name: Guava ListenableFuture only
-  copyrightHolder: Google, Inc.
-  license: The Apache License, Version 2.0
-  url: https://github.com/google/guava
 - artifact: androidx.cardview:cardview:+
   name: Android Support CardView v7
   copyrightHolder: Google, Inc.
