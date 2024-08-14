@@ -7,17 +7,18 @@
 package com.sudoplatform.sudoidentityverification
 
 import android.content.Context
-import com.amazonaws.mobileconnectors.appsync.AWSAppSyncClient
 import com.sudoplatform.sudoapiclient.ApiClientManager
 import com.sudoplatform.sudoidentityverification.types.VerifiedIdentity
 import com.sudoplatform.sudoidentityverification.types.inputs.VerifyIdentityDocumentInput
 import com.sudoplatform.sudoidentityverification.types.inputs.VerifyIdentityInput
 import com.sudoplatform.sudologging.Logger
 import com.sudoplatform.sudouser.SudoUserClient
+import com.sudoplatform.sudouser.amplify.GraphQLClient
 
 /**
  * Options for controlling the behaviour of query APIs.
  */
+@Deprecated("No longer supported")
 enum class QueryOption {
     /**
      * Returns result from the local cache only.
@@ -47,15 +48,15 @@ interface SudoIdentityVerificationClient {
      * Builder used to construct [SudoIdentityVerificationClient].
      */
     class Builder(private val context: Context, private val sudoUserClient: SudoUserClient) {
-        private var graphQLClient: AWSAppSyncClient? = null
+        private var graphQLClient: GraphQLClient? = null
         private var logger: Logger? = null
 
         /**
-         * Provide an [AWSAppSyncClient] for the [SudoIdentityVerificationClient]. If this is not
-         * supplied, an [AWSAppSyncClient] will be obtained from [ApiClientManager]. This is mainly
+         * Provide a [GraphQLClient] for the [SudoIdentityVerificationClient]. If this is not
+         * supplied, a [GraphQLClient] will be obtained from [ApiClientManager]. This is mainly
          * used for unit testing.
          */
-        fun setGraphQLClient(graphQLClient: AWSAppSyncClient) = also {
+        fun setGraphQLClient(graphQLClient: GraphQLClient) = also {
             this.graphQLClient = graphQLClient
         }
 
@@ -115,11 +116,14 @@ interface SudoIdentityVerificationClient {
     /**
      * Checks the identity verification status of the currently signed in user.
      *
-     * @param option [QueryOption] query option.
      * @returns A [VerifiedIdentity] verification result.
      *
      * @throws [SudoIdentityVerificationException].
      */
+    @Throws(SudoIdentityVerificationException::class)
+    suspend fun checkIdentityVerification(): VerifiedIdentity
+
+    @Deprecated("Use checkIdentityVerification with no input parameter as QueryOption is no longer supported")
     @Throws(SudoIdentityVerificationException::class)
     suspend fun checkIdentityVerification(option: QueryOption): VerifiedIdentity
 

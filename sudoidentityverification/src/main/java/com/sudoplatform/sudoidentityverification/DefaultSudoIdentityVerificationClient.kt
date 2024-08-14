@@ -7,28 +7,28 @@
 package com.sudoplatform.sudoidentityverification
 
 import android.content.Context
-import com.amazonaws.mobileconnectors.appsync.AWSAppSyncClient
-import com.amazonaws.mobileconnectors.appsync.fetcher.AppSyncResponseFetchers
 import com.amazonaws.services.cognitoidentity.model.NotAuthorizedException
-import com.apollographql.apollo.api.Error
-import com.apollographql.apollo.exception.ApolloException
+import com.amplifyframework.api.graphql.GraphQLResponse
+import com.apollographql.apollo3.api.Optional
 import com.sudoplatform.sudoapiclient.ApiClientManager
-import com.sudoplatform.sudoidentityverification.documents.CaptureAndVerifyIdentityDocumentMutation
-import com.sudoplatform.sudoidentityverification.documents.CheckIdentityVerificationQuery
-import com.sudoplatform.sudoidentityverification.documents.GetIdentityVerificationCapabilitiesQuery
-import com.sudoplatform.sudoidentityverification.documents.VerifyIdentityDocumentMutation
-import com.sudoplatform.sudoidentityverification.documents.VerifyIdentityMutation
-import com.sudoplatform.sudoidentityverification.extensions.enqueue
-import com.sudoplatform.sudoidentityverification.extensions.enqueueFirst
+import com.sudoplatform.sudoidentityverification.graphql.CaptureAndVerifyIdentityDocumentMutation
+import com.sudoplatform.sudoidentityverification.graphql.CheckIdentityVerificationQuery
+import com.sudoplatform.sudoidentityverification.graphql.GetIdentityVerificationCapabilitiesQuery
+import com.sudoplatform.sudoidentityverification.graphql.VerifyIdentityDocumentMutation
+import com.sudoplatform.sudoidentityverification.graphql.VerifyIdentityMutation
 import com.sudoplatform.sudoidentityverification.types.VerifiedIdentity
 import com.sudoplatform.sudoidentityverification.types.VerifiedIdentityTransformer
 import com.sudoplatform.sudoidentityverification.types.inputs.VerifyIdentityDocumentInput
 import com.sudoplatform.sudoidentityverification.types.inputs.VerifyIdentityInput
 import com.sudoplatform.sudologging.Logger
 import com.sudoplatform.sudouser.SudoUserClient
+import com.sudoplatform.sudouser.amplify.GraphQLClient
+import com.sudoplatform.sudouser.exceptions.GRAPHQL_ERROR_TYPE
+import com.sudoplatform.sudouser.exceptions.HTTP_STATUS_CODE_KEY
+import java.net.HttpURLConnection
 import java.util.concurrent.CancellationException
-import com.sudoplatform.sudoidentityverification.type.VerifyIdentityDocumentInput as VerifyIdentityDocumentRequest
-import com.sudoplatform.sudoidentityverification.type.VerifyIdentityInput as VerifyIdentityRequest
+import com.sudoplatform.sudoidentityverification.graphql.type.VerifyIdentityDocumentInput as VerifyIdentityDocumentMutationInput
+import com.sudoplatform.sudoidentityverification.graphql.type.VerifyIdentityInput as VerifyIdentityMutationInput
 
 /**
  * Default implementation of the [SudoIdentityVerificationClient] interface.
@@ -37,13 +37,13 @@ import com.sudoplatform.sudoidentityverification.type.VerifyIdentityInput as Ver
  * @property sudoUserClient [SudoUserClient] Instance required to issue authentication tokens and perform
  *  cryptographic operations.
  * @property logger [Logger] Logger used for logging messages.
- * @property graphQLClient [AWSAppSyncClient] Optional GraphQL client to use. Mainly used for unit testing.
+ * @property graphQLClient [GraphQLClient] Optional GraphQL client to use. Mainly used for unit testing.
  */
 class DefaultSudoIdentityVerificationClient(
     private val context: Context,
     private val sudoUserClient: SudoUserClient,
     private val logger: Logger = DefaultLogger.instance,
-    graphQLClient: AWSAppSyncClient? = null,
+    graphQLClient: GraphQLClient? = null,
 ) : SudoIdentityVerificationClient {
 
     companion object {
@@ -51,7 +51,6 @@ class DefaultSudoIdentityVerificationClient(
         private const val GOVERNMENT_ID = "GOVERNMENT_ID"
 
         /** Errors returned from the service */
-        private const val ERROR_TYPE = "errorType"
         private const val SERVER_ERROR = "ServerError"
         private const val SERVICE_ERROR = "ServiceError"
         private const val ERROR_RECORD_NOT_FOUND = "IdentityVerificationRecordNotFoundError"
@@ -62,15 +61,16 @@ class DefaultSudoIdentityVerificationClient(
         private const val ERROR_INVALID_AGE = "InvalidAgeError"
         private const val ERROR_UNSUPPORTED_COUNTRY = "UnsupportedCountryError"
         private const val ERROR_UNSUPPORTED_NETWORK_LOCATION = "UnsupportedNetworkLocationError"
-        private const val ERROR_REQUIRED_IDENTITY_INFORMATION_NOT_PROVIDED = "RequiredIdentityInformationNotProvidedError"
+        private const val ERROR_REQUIRED_IDENTITY_INFORMATION_NOT_PROVIDED =
+            "RequiredIdentityInformationNotProvidedError"
     }
 
-    override val version: String = "15.1.8"
+    override val version: String = "16.0.0"
 
     /**
      * GraphQL client used for calling Sudo service API.
      */
-    private val graphQLClient: AWSAppSyncClient
+    private val graphQLClient: GraphQLClient
 
     init {
         this.graphQLClient = graphQLClient ?: ApiClientManager.getClient(
@@ -87,18 +87,18 @@ class DefaultSudoIdentityVerificationClient(
         }
 
         try {
-            val query = GetIdentityVerificationCapabilitiesQuery.builder()
-                .build()
-
-            val response = this.graphQLClient.query(query)
-                .enqueueFirst()
+            val response =
+                this.graphQLClient.query<GetIdentityVerificationCapabilitiesQuery, GetIdentityVerificationCapabilitiesQuery.Data>(
+                    GetIdentityVerificationCapabilitiesQuery.OPERATION_DOCUMENT,
+                    emptyMap(),
+                )
 
             if (response.hasErrors()) {
-                logger.warning("errors = ${response.errors()}")
-                throw interpretSudoIdentityVerificationError(response.errors().first())
+                logger.warning("errors = ${response.errors}")
+                throw interpretSudoIdentityVerificationError(response.errors.first())
             }
 
-            return response.data()?.identityVerificationCapabilities?.supportedCountries()
+            return response.data?.getIdentityVerificationCapabilities?.supportedCountries
                 ?: listOf()
         } catch (e: Throwable) {
             logger.warning("unexpected error $e")
@@ -106,7 +106,6 @@ class DefaultSudoIdentityVerificationClient(
                 is NotAuthorizedException -> throw SudoIdentityVerificationException.AuthenticationException(
                     cause = e,
                 )
-                is ApolloException -> throw SudoIdentityVerificationException.FailedException(cause = e)
                 else -> throw interpretSudoIdentityVerificationException(e)
             }
         }
@@ -120,18 +119,18 @@ class DefaultSudoIdentityVerificationClient(
         }
 
         try {
-            val query = GetIdentityVerificationCapabilitiesQuery.builder()
-                .build()
-
-            val response = this.graphQLClient.query(query)
-                .enqueueFirst()
+            val response =
+                this.graphQLClient.query<GetIdentityVerificationCapabilitiesQuery, GetIdentityVerificationCapabilitiesQuery.Data>(
+                    GetIdentityVerificationCapabilitiesQuery.OPERATION_DOCUMENT,
+                    emptyMap(),
+                )
 
             if (response.hasErrors()) {
-                logger.warning("errors = ${response.errors()}")
-                throw interpretSudoIdentityVerificationError(response.errors().first())
+                logger.warning("errors = ${response.errors}")
+                throw interpretSudoIdentityVerificationError(response.errors.first())
             }
 
-            return response.data()?.identityVerificationCapabilities?.faceImageRequiredWithDocument()
+            return response.data?.getIdentityVerificationCapabilities?.faceImageRequiredWithDocument
                 ?: false
         } catch (e: Throwable) {
             logger.warning("unexpected error $e")
@@ -139,13 +138,16 @@ class DefaultSudoIdentityVerificationClient(
                 is NotAuthorizedException -> throw SudoIdentityVerificationException.AuthenticationException(
                     cause = e,
                 )
-                is ApolloException -> throw SudoIdentityVerificationException.FailedException(cause = e)
                 else -> throw interpretSudoIdentityVerificationException(e)
             }
         }
     }
 
+    @Deprecated("QueryOption is no longer supported", ReplaceWith("checkIdentityVerification()"))
     override suspend fun checkIdentityVerification(option: QueryOption): VerifiedIdentity {
+        return checkIdentityVerification()
+    }
+    override suspend fun checkIdentityVerification(): VerifiedIdentity {
         this.logger.info("Checking the identity verification status.")
 
         if (!this.sudoUserClient.isSignedIn()) {
@@ -153,27 +155,16 @@ class DefaultSudoIdentityVerificationClient(
         }
 
         try {
-            val query = CheckIdentityVerificationQuery.builder()
-                .build()
-
-            val responseFetcher = when (option) {
-                QueryOption.CACHE_ONLY -> {
-                    AppSyncResponseFetchers.CACHE_ONLY
-                }
-                QueryOption.REMOTE_ONLY -> {
-                    AppSyncResponseFetchers.NETWORK_ONLY
-                }
-            }
-
-            val response = this.graphQLClient.query(query)
-                .responseFetcher(responseFetcher)
-                .enqueueFirst()
+            val response = this.graphQLClient.query<CheckIdentityVerificationQuery, CheckIdentityVerificationQuery.Data>(
+                CheckIdentityVerificationQuery.OPERATION_DOCUMENT,
+                emptyMap(),
+            )
 
             if (response.hasErrors()) {
-                logger.warning("errors = ${response.errors()}")
-                throw interpretSudoIdentityVerificationError(response.errors().first())
+                logger.warning("errors = ${response.errors}")
+                throw interpretSudoIdentityVerificationError(response.errors.first())
             }
-            val result = response.data()?.checkIdentityVerification()?.fragments()?.verifiedIdentity()
+            val result = response.data?.checkIdentityVerification?.verifiedIdentity
             result?.let {
                 return VerifiedIdentityTransformer.toEntity(result)
             }
@@ -184,7 +175,6 @@ class DefaultSudoIdentityVerificationClient(
                 is NotAuthorizedException -> throw SudoIdentityVerificationException.AuthenticationException(
                     cause = e,
                 )
-                is ApolloException -> throw SudoIdentityVerificationException.FailedException(cause = e)
                 else -> throw interpretSudoIdentityVerificationException(e)
             }
         }
@@ -198,29 +188,28 @@ class DefaultSudoIdentityVerificationClient(
         }
 
         try {
-            val mutationInput = VerifyIdentityRequest.builder()
-                .verificationMethod(KNOWLEDGE_OF_PII)
-                .firstName(input.firstName)
-                .lastName(input.lastName)
-                .address(input.address)
-                .city(input.city)
-                .state(input.state)
-                .postalCode(input.postalCode)
-                .country(input.country)
-                .dateOfBirth(input.dateOfBirth)
-                .build()
-            val mutation = VerifyIdentityMutation.builder()
-                .input(mutationInput)
-                .build()
+            val mutationInput = VerifyIdentityMutationInput(
+                verificationMethod = KNOWLEDGE_OF_PII,
+                firstName = input.firstName,
+                lastName = input.lastName,
+                address = input.address,
+                city = Optional.presentIfNotNull(input.city),
+                state = Optional.presentIfNotNull(input.state),
+                postalCode = input.postalCode,
+                country = input.country,
+                dateOfBirth = input.dateOfBirth,
+            )
 
-            val response = this.graphQLClient.mutate(mutation)
-                .enqueue()
+            val response = this.graphQLClient.mutate<VerifyIdentityMutation, VerifyIdentityMutation.Data>(
+                VerifyIdentityMutation.OPERATION_DOCUMENT,
+                mapOf("input" to Optional.presentIfNotNull(mutationInput)),
+            )
 
             if (response.hasErrors()) {
-                logger.warning("errors = ${response.errors()}")
-                throw interpretSudoIdentityVerificationError(response.errors().first())
+                logger.warning("errors = ${response.errors}")
+                throw interpretSudoIdentityVerificationError(response.errors.first())
             }
-            val result = response.data()?.verifyIdentity()?.fragments()?.verifiedIdentity()
+            val result = response.data?.verifyIdentity?.verifiedIdentity
             result?.let {
                 return VerifiedIdentityTransformer.toEntity(result)
             }
@@ -231,7 +220,6 @@ class DefaultSudoIdentityVerificationClient(
                 is NotAuthorizedException -> throw SudoIdentityVerificationException.AuthenticationException(
                     cause = e,
                 )
-                is ApolloException -> throw SudoIdentityVerificationException.FailedException(cause = e)
                 else -> throw interpretSudoIdentityVerificationException(e)
             }
         }
@@ -245,26 +233,25 @@ class DefaultSudoIdentityVerificationClient(
         }
 
         try {
-            val mutationInput = VerifyIdentityDocumentRequest.builder()
-                .verificationMethod(GOVERNMENT_ID)
-                .imageBase64(input.imageBase64)
-                .backImageBase64(input.backImageBase64)
-                .faceImageBase64(input.faceImageBase64)
-                .country(input.country)
-                .documentType(input.documentType.type)
-                .build()
-            val mutation = VerifyIdentityDocumentMutation.builder()
-                .input(mutationInput)
-                .build()
+            val mutationInput = VerifyIdentityDocumentMutationInput(
+                verificationMethod = GOVERNMENT_ID,
+                imageBase64 = input.imageBase64,
+                backImageBase64 = input.backImageBase64,
+                faceImageBase64 = Optional.presentIfNotNull(input.faceImageBase64),
+                country = input.country,
+                documentType = input.documentType.type,
+            )
 
-            val response = this.graphQLClient.mutate(mutation)
-                .enqueue()
+            val response = this.graphQLClient.mutate<VerifyIdentityDocumentMutation, VerifyIdentityDocumentMutation.Data>(
+                VerifyIdentityDocumentMutation.OPERATION_DOCUMENT,
+                mapOf("input" to Optional.presentIfNotNull(mutationInput)),
+            )
 
             if (response.hasErrors()) {
-                logger.warning("errors = ${response.errors()}")
-                throw interpretSudoIdentityVerificationError(response.errors().first())
+                logger.warning("errors = ${response.errors}")
+                throw interpretSudoIdentityVerificationError(response.errors.first())
             }
-            val result = response.data()?.verifyIdentityDocument()?.fragments()?.verifiedIdentity()
+            val result = response.data?.verifyIdentityDocument?.verifiedIdentity
             result?.let {
                 return VerifiedIdentityTransformer.toEntity(result)
             }
@@ -275,7 +262,6 @@ class DefaultSudoIdentityVerificationClient(
                 is NotAuthorizedException -> throw SudoIdentityVerificationException.AuthenticationException(
                     cause = e,
                 )
-                is ApolloException -> throw SudoIdentityVerificationException.FailedException(cause = e)
                 else -> throw interpretSudoIdentityVerificationException(e)
             }
         }
@@ -289,26 +275,24 @@ class DefaultSudoIdentityVerificationClient(
         }
 
         try {
-            val mutationInput = VerifyIdentityDocumentRequest.builder()
-                .verificationMethod(GOVERNMENT_ID)
-                .imageBase64(input.imageBase64)
-                .backImageBase64(input.backImageBase64)
-                .faceImageBase64(input.faceImageBase64)
-                .country(input.country)
-                .documentType(input.documentType.type)
-                .build()
-            val mutation = CaptureAndVerifyIdentityDocumentMutation.builder()
-                .input(mutationInput)
-                .build()
-
-            val response = this.graphQLClient.mutate(mutation)
-                .enqueue()
+            val mutationInput = VerifyIdentityDocumentMutationInput(
+                verificationMethod = GOVERNMENT_ID,
+                imageBase64 = input.imageBase64,
+                backImageBase64 = input.backImageBase64,
+                faceImageBase64 = Optional.presentIfNotNull(input.faceImageBase64),
+                country = input.country,
+                documentType = input.documentType.type,
+            )
+            val response = this.graphQLClient.mutate<CaptureAndVerifyIdentityDocumentMutation, CaptureAndVerifyIdentityDocumentMutation.Data>(
+                CaptureAndVerifyIdentityDocumentMutation.OPERATION_DOCUMENT,
+                mapOf("input" to Optional.presentIfNotNull(mutationInput)),
+            )
 
             if (response.hasErrors()) {
-                logger.warning("errors = ${response.errors()}")
-                throw interpretSudoIdentityVerificationError(response.errors().first())
+                logger.warning("errors = ${response.errors}")
+                throw interpretSudoIdentityVerificationError(response.errors.first())
             }
-            val result = response.data()?.captureAndVerifyIdentityDocument()?.fragments()?.verifiedIdentity()
+            val result = response.data?.captureAndVerifyIdentityDocument?.verifiedIdentity
             result?.let {
                 return VerifiedIdentityTransformer.toEntity(result)
             }
@@ -319,7 +303,6 @@ class DefaultSudoIdentityVerificationClient(
                 is NotAuthorizedException -> throw SudoIdentityVerificationException.AuthenticationException(
                     cause = e,
                 )
-                is ApolloException -> throw SudoIdentityVerificationException.FailedException(cause = e)
                 else -> throw interpretSudoIdentityVerificationException(e)
             }
         }
@@ -327,11 +310,17 @@ class DefaultSudoIdentityVerificationClient(
 
     override fun reset() {
         this.logger.info("Resetting client.")
-        this.graphQLClient.clearCaches()
     }
 
-    private fun interpretSudoIdentityVerificationError(e: Error): SudoIdentityVerificationException {
-        val error = e.customAttributes()[ERROR_TYPE]?.toString() ?: ""
+    private fun interpretSudoIdentityVerificationError(e: GraphQLResponse.Error): SudoIdentityVerificationException {
+        val httpStatusCode = e.extensions?.get(HTTP_STATUS_CODE_KEY) as Int?
+        val error = e.extensions?.get(GRAPHQL_ERROR_TYPE)?.toString() ?: ""
+
+        if (httpStatusCode == HttpURLConnection.HTTP_UNAUTHORIZED) {
+            return SudoIdentityVerificationException.AuthenticationException(e.message)
+        } else if (httpStatusCode != null && httpStatusCode >= HttpURLConnection.HTTP_INTERNAL_ERROR) {
+            return SudoIdentityVerificationException.FailedException(e.message)
+        }
         if (error.contains(SERVER_ERROR) || error.contains(SERVICE_ERROR)) {
             return SudoIdentityVerificationException.InternalServerException(message = error)
         } else if (error.contains(ERROR_RECORD_NOT_FOUND)) {

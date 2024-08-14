@@ -1,7 +1,6 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-parcelize'
-apply plugin: 'com.amazonaws.appsync'
 apply plugin: 'org.jetbrains.dokka'
 apply plugin: 'org.sonarqube'
 apply plugin: 'jacoco'
@@ -9,10 +8,6 @@ apply plugin: "org.owasp.dependencycheck"
 
 jacoco {
     toolVersion = "0.8.10"
-}
-
-node {
-    version = "16.18.0"
 }
 
 android {
@@ -24,7 +19,7 @@ android {
         minSdkVersion 26
         targetSdkVersion 34
         versionCode 1
-        versionName "15.1.8"
+        versionName "16.0.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         testApplicationId = "com.sudoplatform.sudoidentityverification.test"
@@ -98,12 +93,19 @@ dependencies {
     // Follow the process at https://anonyome.atlassian.net/wiki/spaces/PLA/pages/840073287/AWS+Android+SDK+versions+to+use+for+platform+SDKs
     // for updating AWS SDK versions.
     implementation "com.amazonaws:aws-android-sdk-core:$aws_version!!"
-    implementation "com.amazonaws:aws-android-sdk-appsync:$appsync_version!!"
+
+    // Amplify
+    implementation "com.amplifyframework:core-kotlin:$amplify_version"
+    implementation "com.amplifyframework:aws-api-appsync:$amplify_version"
+    implementation "com.amplifyframework:aws-api:$amplify_version"
+
+    // apollo codegen
+    implementation("com.apollographql.apollo3:apollo-runtime:4.0.0-beta.7")
 
     // Sudo Platform SDKs.
     implementation 'com.sudoplatform:sudologging:5.0.0'
-    implementation "com.sudoplatform:sudouser:19.0.0"
-    implementation 'com.sudoplatform:sudoapiclient:10.0.0'
+    implementation "com.sudoplatform:sudouser:20.0.0"
+    implementation 'com.sudoplatform:sudoapiclient:11.0.0'
 
     // Testing
     testImplementation 'junit:junit:4.13.2'
@@ -123,8 +125,8 @@ dependencies {
     androidTestImplementation "io.kotlintest:kotlintest-assertions:3.4.2"
 
     androidTestImplementation 'com.sudoplatform:sudokeymanager:8.0.0'
-    androidTestImplementation 'com.sudoplatform:sudoentitlementsadmin:8.0.0'
-    androidTestImplementation 'com.sudoplatform:sudoentitlements:10.0.0'
+    androidTestImplementation 'com.sudoplatform:sudoentitlementsadmin:10.0.0'
+    androidTestImplementation 'com.sudoplatform:sudoentitlements:12.0.2'
 }
 
 tasks.register('jacocoTestReport', JacocoReport) {
@@ -200,8 +202,12 @@ afterEvaluate {
             }
         }
     }
+    tasks.named("sourceReleaseJar") {
+        dependsOn("generateServiceApolloSources")
+    }
 }
 
+// https://github.com/cookpad/license-tools-plugin
 apply plugin: "com.cookpad.android.plugin.license-tools"
 licenseTools {
     licensesYaml = file("licenses.yml")
@@ -243,6 +249,22 @@ apply plugin: 'org.jmailen.kotlinter'
 kotlinter {
     ignoreFailures = false
     reporters = ['checkstyle', 'plain']
+}
+
+// Exclude the apollographql-generated classes from linting
+tasks.formatKotlinMain {
+    exclude { it.file.path.contains("generated/")}
+}
+
+tasks.lintKotlinMain {
+    exclude { it.file.path.contains("generated/")}
+}
+
+apply plugin: "com.apollographql.apollo3"
+apollo {
+    service("service") {
+        packageName.set("com.sudoplatform.sudoidentityverification.graphql")
+    }
 }
 
 // Sonarqube code analysis
