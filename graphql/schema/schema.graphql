@@ -1,13 +1,14 @@
 type VerifiedIdentity @aws_cognito_user_pools {
   owner: String!
   verified: Boolean!
-  verifiedAtEpochMs: Float
+  verifiedAtEpochMs: Float!
   verificationMethod: String!
   canAttemptVerificationAgain: Boolean!
   idScanUrl: String
   requiredVerificationMethod: String
   acceptableDocumentTypes: [String!]!
   documentVerificationStatus: String!
+  verificationLastAttemptedAtEpochMs: Float!
 }
 
 input VerifyIdentityInput {

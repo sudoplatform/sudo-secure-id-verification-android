@@ -24,11 +24,12 @@ import java.util.Date
 data class VerifiedIdentity(
     val owner: String,
     val verified: Boolean,
-    val verifiedAt: Date?,
+    val verifiedAt: Date,
     val verificationMethod: VerificationMethod,
     val canAttemptVerificationAgain: Boolean,
     val idScanUrl: String?,
     val requiredVerificationMethod: VerificationMethod?,
     val acceptableDocumentTypes: List<IdDocumentType>,
     val documentVerificationStatus: DocumentVerificationStatus,
+    val verificationLastAttemptedAt: Date,
 )

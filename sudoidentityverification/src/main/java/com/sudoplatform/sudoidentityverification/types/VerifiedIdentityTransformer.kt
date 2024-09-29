@@ -8,13 +8,14 @@ internal object VerifiedIdentityTransformer {
         return VerifiedIdentity(
             owner = graphql.owner,
             verified = graphql.verified,
-            verifiedAt = graphql.verifiedAtEpochMs ?.let { Date(it.toLong()) },
+            verifiedAt = graphql.verifiedAtEpochMs.let { Date(it.toLong()) },
             verificationMethod = graphql.verificationMethod.toVerificationMethod(),
             canAttemptVerificationAgain = graphql.canAttemptVerificationAgain,
             idScanUrl = graphql.idScanUrl,
             requiredVerificationMethod = graphql.requiredVerificationMethod?.toVerificationMethod(),
             acceptableDocumentTypes = graphql.acceptableDocumentTypes.map() { it.toIdDocumentType() },
             documentVerificationStatus = graphql.documentVerificationStatus.toDocumentVerificationStatus(),
+            verificationLastAttemptedAt = graphql.verificationLastAttemptedAtEpochMs.let { Date(it.toLong()) },
         )
     }
 }

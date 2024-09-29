@@ -8,4 +8,5 @@ fragment VerifiedIdentity on VerifiedIdentity {
   requiredVerificationMethod
   acceptableDocumentTypes
   documentVerificationStatus
+  verificationLastAttemptedAtEpochMs
 }
