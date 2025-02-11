@@ -65,7 +65,7 @@ class DefaultSudoIdentityVerificationClient(
             "RequiredIdentityInformationNotProvidedError"
     }
 
-    override val version: String = "16.1.0"
+    override val version: String = "17.0.0"
 
     /**
      * GraphQL client used for calling Sudo service API.
@@ -143,10 +143,6 @@ class DefaultSudoIdentityVerificationClient(
         }
     }
 
-    @Deprecated("QueryOption is no longer supported", ReplaceWith("checkIdentityVerification()"))
-    override suspend fun checkIdentityVerification(option: QueryOption): VerifiedIdentity {
-        return checkIdentityVerification()
-    }
     override suspend fun checkIdentityVerification(): VerifiedIdentity {
         this.logger.info("Checking the identity verification status.")
 

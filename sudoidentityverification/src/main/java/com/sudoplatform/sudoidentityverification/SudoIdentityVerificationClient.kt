@@ -16,22 +16,6 @@ import com.sudoplatform.sudouser.SudoUserClient
 import com.sudoplatform.sudouser.amplify.GraphQLClient
 
 /**
- * Options for controlling the behaviour of query APIs.
- */
-@Deprecated("No longer supported")
-enum class QueryOption {
-    /**
-     * Returns result from the local cache only.
-     */
-    CACHE_ONLY,
-
-    /**
-     * Fetches result from the backend and ignores any cached entries.
-     */
-    REMOTE_ONLY,
-}
-
-/**
  * Interface encapsulating a library for interacting with the Sudo Platform Identity Verification service.
  */
 interface SudoIdentityVerificationClient {
@@ -122,10 +106,6 @@ interface SudoIdentityVerificationClient {
      */
     @Throws(SudoIdentityVerificationException::class)
     suspend fun checkIdentityVerification(): VerifiedIdentity
-
-    @Deprecated("Use checkIdentityVerification with no input parameter as QueryOption is no longer supported")
-    @Throws(SudoIdentityVerificationException::class)
-    suspend fun checkIdentityVerification(option: QueryOption): VerifiedIdentity
 
     /**
      * Verifies an identity against the known public records and returns a result indicating whether

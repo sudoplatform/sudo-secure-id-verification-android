@@ -22,13 +22,16 @@ buildscript {
         classpath "org.jmailen.gradle:kotlinter-gradle:3.16.0"
         classpath "org.owasp:dependency-check-gradle:8.2.1"
         classpath "org.jetbrains.dokka:dokka-gradle-plugin:$dokka_version"
-        classpath "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:4.0.0.2929"
+        classpath "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:6.0.1.5171"
         classpath "gradle.plugin.com.cookpad.android.plugin:plugin:1.2.8"
         classpath ("com.squareup.moshi:moshi") {
             version{
                 strictly '1.8.0'
             }
         }
+        // Needed to allow SonarQube version 6.0.1.5171 to work. Should be fixed in Android Gradle Plugin 8.9.0
+        // https://community.sonarsource.com/t/sonarqube-gradle-plugin-6-0-breaks-android-tasks/130863/5
+        classpath("org.bouncycastle:bcutil-jdk18on:1.79")
     }
 }
 
