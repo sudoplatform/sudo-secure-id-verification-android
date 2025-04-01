@@ -8,6 +8,7 @@ package com.sudoplatform.sudoidentityverification
 
 import android.content.Context
 import com.sudoplatform.sudoapiclient.ApiClientManager
+import com.sudoplatform.sudoidentityverification.types.IdentityDocumentCaptureInitiationInfo
 import com.sudoplatform.sudoidentityverification.types.VerifiedIdentity
 import com.sudoplatform.sudoidentityverification.types.inputs.VerifyIdentityDocumentInput
 import com.sudoplatform.sudoidentityverification.types.inputs.VerifyIdentityInput
@@ -98,6 +99,17 @@ interface SudoIdentityVerificationClient {
     suspend fun isFaceImageRequired(): Boolean
 
     /**
+     * Retrieves the flag for whether document capture can be initiated using
+     * initiateIdentityDocumentCapture().
+     *
+     * @return boolean flag.
+     *
+     * @throws [SudoIdentityVerificationException].
+     */
+    @Throws(SudoIdentityVerificationException::class)
+    suspend fun isDocumentCaptureInitiationEnabled(): Boolean
+
+    /**
      * Checks the identity verification status of the currently signed in user.
      *
      * @returns A [VerifiedIdentity] verification result.
@@ -145,6 +157,16 @@ interface SudoIdentityVerificationClient {
      */
     @Throws(SudoIdentityVerificationException::class)
     suspend fun captureAndVerifyIdentityDocument(input: VerifyIdentityDocumentInput): VerifiedIdentity
+
+    /**
+     * Attempts to initiate ID document capture using underlying provider's web based method.
+     *
+     * @return A [IdentityDocumentCaptureInitiationInfo] verification result.
+     *
+     * @throws [SudoIdentityVerificationException].
+     */
+    @Throws(SudoIdentityVerificationException::class)
+    suspend fun initiateIdentityDocumentCapture(): IdentityDocumentCaptureInitiationInfo
 
     /**
      * Reset any internal state and cached content.

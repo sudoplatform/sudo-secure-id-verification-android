@@ -35,6 +35,12 @@ input VerifyIdentityDocumentInput {
 type IdentityVerificationCapabilities @aws_cognito_user_pools {
   supportedCountries: [String!]!
   faceImageRequiredWithDocument: Boolean!
+  canInitiateDocumentCapture: Boolean!
+}
+
+type IdentityDocumentCaptureInitiationResponse @aws_cognito_user_pools {
+  documentCaptureUrl: String!
+  expiryAtEpochSeconds: Float!
 }
 
 type Mutation {
@@ -42,7 +48,10 @@ type Mutation {
     @aws_cognito_user_pools
   verifyIdentityDocument(input: VerifyIdentityDocumentInput): VerifiedIdentity
     @aws_cognito_user_pools
-  captureAndVerifyIdentityDocument(input: VerifyIdentityDocumentInput): VerifiedIdentity
+  captureAndVerifyIdentityDocument(
+    input: VerifyIdentityDocumentInput
+  ): VerifiedIdentity @aws_cognito_user_pools
+  initiateIdentityDocumentCapture: IdentityDocumentCaptureInitiationResponse
     @aws_cognito_user_pools
 }
 

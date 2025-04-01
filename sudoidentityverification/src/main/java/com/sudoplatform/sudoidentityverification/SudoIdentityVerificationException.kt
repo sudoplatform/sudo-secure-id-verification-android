@@ -63,6 +63,13 @@ sealed class SudoIdentityVerificationException(message: String? = null, cause: T
         SudoIdentityVerificationException(message = message, cause = cause)
 
     /**
+     * An operation for unverified user was invoked for a user for which identity verification was
+     * already completed.
+     */
+    class IdentityAlreadyVerifiedException(message: String? = null, cause: Throwable? = null) :
+        SudoIdentityVerificationException(message = message, cause = cause)
+
+    /**
      * Indicates the user is not signed in but requested an operation that requires authentication.
      */
     class NotSignedInException(message: String? = null, cause: Throwable? = null) :

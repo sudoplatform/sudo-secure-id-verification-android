@@ -1,0 +1,6 @@
+mutation InitiateIdentityDocumentCapture {
+  initiateIdentityDocumentCapture {
+    documentCaptureUrl
+    expiryAtEpochSeconds
+  }
+}

@@ -14,8 +14,11 @@ import com.sudoplatform.sudoapiclient.ApiClientManager
 import com.sudoplatform.sudoidentityverification.graphql.CaptureAndVerifyIdentityDocumentMutation
 import com.sudoplatform.sudoidentityverification.graphql.CheckIdentityVerificationQuery
 import com.sudoplatform.sudoidentityverification.graphql.GetIdentityVerificationCapabilitiesQuery
+import com.sudoplatform.sudoidentityverification.graphql.InitiateIdentityDocumentCaptureMutation
 import com.sudoplatform.sudoidentityverification.graphql.VerifyIdentityDocumentMutation
 import com.sudoplatform.sudoidentityverification.graphql.VerifyIdentityMutation
+import com.sudoplatform.sudoidentityverification.types.IdentityDocumentCaptureInitiationInfo
+import com.sudoplatform.sudoidentityverification.types.IdentityDocumentCaptureInitiationInfoTransformer
 import com.sudoplatform.sudoidentityverification.types.VerifiedIdentity
 import com.sudoplatform.sudoidentityverification.types.VerifiedIdentityTransformer
 import com.sudoplatform.sudoidentityverification.types.inputs.VerifyIdentityDocumentInput
@@ -63,9 +66,10 @@ class DefaultSudoIdentityVerificationClient(
         private const val ERROR_UNSUPPORTED_NETWORK_LOCATION = "UnsupportedNetworkLocationError"
         private const val ERROR_REQUIRED_IDENTITY_INFORMATION_NOT_PROVIDED =
             "RequiredIdentityInformationNotProvidedError"
+        private const val ERROR_ALREADY_VERIFIED = "IdentityAlreadyVerifiedError"
     }
 
-    override val version: String = "17.0.0"
+    override val version: String = "17.1.0"
 
     /**
      * GraphQL client used for calling Sudo service API.
@@ -131,6 +135,38 @@ class DefaultSudoIdentityVerificationClient(
             }
 
             return response.data?.getIdentityVerificationCapabilities?.faceImageRequiredWithDocument
+                ?: false
+        } catch (e: Throwable) {
+            logger.warning("unexpected error $e")
+            when (e) {
+                is NotAuthorizedException -> throw SudoIdentityVerificationException.AuthenticationException(
+                    cause = e,
+                )
+                else -> throw interpretSudoIdentityVerificationException(e)
+            }
+        }
+    }
+
+    override suspend fun isDocumentCaptureInitiationEnabled(): Boolean {
+        this.logger.info("Retrieves the flag for whether document capture can be initiated using initiateIdentityDocumentCapture()")
+
+        if (!this.sudoUserClient.isSignedIn()) {
+            throw SudoIdentityVerificationException.NotSignedInException()
+        }
+
+        try {
+            val response =
+                this.graphQLClient.query<GetIdentityVerificationCapabilitiesQuery, GetIdentityVerificationCapabilitiesQuery.Data>(
+                    GetIdentityVerificationCapabilitiesQuery.OPERATION_DOCUMENT,
+                    emptyMap(),
+                )
+
+            if (response.hasErrors()) {
+                logger.warning("errors = ${response.errors}")
+                throw interpretSudoIdentityVerificationError(response.errors.first())
+            }
+
+            return response.data?.getIdentityVerificationCapabilities?.canInitiateDocumentCapture
                 ?: false
         } catch (e: Throwable) {
             logger.warning("unexpected error $e")
@@ -304,6 +340,39 @@ class DefaultSudoIdentityVerificationClient(
         }
     }
 
+    override suspend fun initiateIdentityDocumentCapture(): IdentityDocumentCaptureInitiationInfo {
+        this.logger.info("Attempts to initiate ID document capture using underlying provider's web based method.")
+
+        if (!this.sudoUserClient.isSignedIn()) {
+            throw SudoIdentityVerificationException.NotSignedInException()
+        }
+
+        try {
+            val response = this.graphQLClient.mutate<InitiateIdentityDocumentCaptureMutation, InitiateIdentityDocumentCaptureMutation.Data>(
+                InitiateIdentityDocumentCaptureMutation.OPERATION_DOCUMENT,
+                emptyMap(),
+            )
+
+            if (response.hasErrors()) {
+                logger.warning("errors = ${response.errors}")
+                throw interpretSudoIdentityVerificationError(response.errors.first())
+            }
+            val result = response.data?.initiateIdentityDocumentCapture
+            result?.let {
+                return IdentityDocumentCaptureInitiationInfoTransformer.toEntity(result)
+            }
+            throw SudoIdentityVerificationException.FailedException("Mutation succeeded but output was null.")
+        } catch (e: Throwable) {
+            logger.warning("unexpected error $e")
+            when (e) {
+                is NotAuthorizedException -> throw SudoIdentityVerificationException.AuthenticationException(
+                    cause = e,
+                )
+                else -> throw interpretSudoIdentityVerificationException(e)
+            }
+        }
+    }
+
     override fun reset() {
         this.logger.info("Resetting client.")
     }
@@ -339,6 +408,8 @@ class DefaultSudoIdentityVerificationClient(
             return SudoIdentityVerificationException.UnsupportedNetworkLocationException(message = error)
         } else if (error.contains(ERROR_REQUIRED_IDENTITY_INFORMATION_NOT_PROVIDED)) {
             return SudoIdentityVerificationException.RequiredIdentityInformationNotProvidedException(message = error)
+        } else if (error.contains(ERROR_ALREADY_VERIFIED)) {
+            return SudoIdentityVerificationException.IdentityAlreadyVerifiedException(message = error)
         }
         return SudoIdentityVerificationException.FailedException(e.toString())
     }

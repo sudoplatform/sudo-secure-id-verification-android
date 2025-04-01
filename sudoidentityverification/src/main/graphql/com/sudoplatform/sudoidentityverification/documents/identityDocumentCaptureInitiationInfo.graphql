@@ -1,0 +1,4 @@
+fragment IdentityDocumentCaptureInitiationInfo on IdentityDocumentCaptureInitiationResponse {
+  documentCaptureUrl
+  expiryAtEpochSeconds
+}

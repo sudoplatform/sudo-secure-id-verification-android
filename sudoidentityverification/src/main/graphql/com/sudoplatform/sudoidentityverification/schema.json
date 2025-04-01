@@ -30,9 +30,68 @@
       },
       {
         "kind": "OBJECT",
+        "name": "IdentityDocumentCaptureInitiationResponse",
+        "description": null,
+        "fields": [
+          {
+            "name": "documentCaptureUrl",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "expiryAtEpochSeconds",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Float",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ],
+        "inputFields": null,
+        "interfaces": [],
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
         "name": "IdentityVerificationCapabilities",
         "description": null,
         "fields": [
+          {
+            "name": "canInitiateDocumentCapture",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Boolean",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
           {
             "name": "faceImageRequiredWithDocument",
             "description": null,
@@ -104,6 +163,18 @@
             "type": {
               "kind": "OBJECT",
               "name": "VerifiedIdentity",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "initiateIdentityDocumentCapture",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "OBJECT",
+              "name": "IdentityDocumentCaptureInitiationResponse",
               "ofType": null
             },
             "isDeprecated": false,
