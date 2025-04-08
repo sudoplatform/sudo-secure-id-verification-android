@@ -88,15 +88,26 @@ interface SudoIdentityVerificationClient {
     suspend fun listSupportedCountries(): List<String>
 
     /**
-     * Retrieves a flag indicating if face image must be submitted with identity
-     * documents.
+     * Flag indicating if face image must be submitted as part of identity
+     * document capture.
      *
      * @return boolean flag.
      *
      * @throws [SudoIdentityVerificationException].
      */
     @Throws(SudoIdentityVerificationException::class)
-    suspend fun isFaceImageRequired(): Boolean
+    suspend fun isFaceImageRequiredWithDocumentCapture(): Boolean
+
+    /**
+     * Flag indicating if face image must be submitted as part of identity
+     * document verification.
+     *
+     * @return boolean flag.
+     *
+     * @throws [SudoIdentityVerificationException].
+     */
+    @Throws(SudoIdentityVerificationException::class)
+    suspend fun isFaceImageRequiredWithDocumentVerification(): Boolean
 
     /**
      * Retrieves the flag for whether document capture can be initiated using

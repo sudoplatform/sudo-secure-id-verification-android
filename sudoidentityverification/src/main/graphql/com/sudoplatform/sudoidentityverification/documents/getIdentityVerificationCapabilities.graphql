@@ -1,7 +1,8 @@
 query GetIdentityVerificationCapabilities {
   getIdentityVerificationCapabilities {
     supportedCountries
-    faceImageRequiredWithDocument
+    faceImageRequiredWithDocumentCapture
+    faceImageRequiredWithDocumentVerification
     canInitiateDocumentCapture
   }
 }

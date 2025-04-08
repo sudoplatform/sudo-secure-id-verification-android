@@ -34,7 +34,8 @@ input VerifyIdentityDocumentInput {
 
 type IdentityVerificationCapabilities @aws_cognito_user_pools {
   supportedCountries: [String!]!
-  faceImageRequiredWithDocument: Boolean!
+  faceImageRequiredWithDocumentCapture: Boolean!
+  faceImageRequiredWithDocumentVerification: Boolean!
   canInitiateDocumentCapture: Boolean!
 }
 

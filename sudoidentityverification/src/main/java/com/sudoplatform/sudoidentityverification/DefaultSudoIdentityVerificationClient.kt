@@ -69,7 +69,7 @@ class DefaultSudoIdentityVerificationClient(
         private const val ERROR_ALREADY_VERIFIED = "IdentityAlreadyVerifiedError"
     }
 
-    override val version: String = "17.1.0"
+    override val version: String = "18.0.0"
 
     /**
      * GraphQL client used for calling Sudo service API.
@@ -115,7 +115,7 @@ class DefaultSudoIdentityVerificationClient(
         }
     }
 
-    override suspend fun isFaceImageRequired(): Boolean {
+    override suspend fun isFaceImageRequiredWithDocumentVerification(): Boolean {
         this.logger.info("Retrieving the flag indicating if face images need to be provided with ID document verification.")
 
         if (!this.sudoUserClient.isSignedIn()) {
@@ -134,7 +134,39 @@ class DefaultSudoIdentityVerificationClient(
                 throw interpretSudoIdentityVerificationError(response.errors.first())
             }
 
-            return response.data?.getIdentityVerificationCapabilities?.faceImageRequiredWithDocument
+            return response.data?.getIdentityVerificationCapabilities?.faceImageRequiredWithDocumentVerification
+                ?: false
+        } catch (e: Throwable) {
+            logger.warning("unexpected error $e")
+            when (e) {
+                is NotAuthorizedException -> throw SudoIdentityVerificationException.AuthenticationException(
+                    cause = e,
+                )
+                else -> throw interpretSudoIdentityVerificationException(e)
+            }
+        }
+    }
+
+    override suspend fun isFaceImageRequiredWithDocumentCapture(): Boolean {
+        this.logger.info("Retrieving the flag indicating if face images need to be provided with ID document capture.")
+
+        if (!this.sudoUserClient.isSignedIn()) {
+            throw SudoIdentityVerificationException.NotSignedInException()
+        }
+
+        try {
+            val response =
+                this.graphQLClient.query<GetIdentityVerificationCapabilitiesQuery, GetIdentityVerificationCapabilitiesQuery.Data>(
+                    GetIdentityVerificationCapabilitiesQuery.OPERATION_DOCUMENT,
+                    emptyMap(),
+                )
+
+            if (response.hasErrors()) {
+                logger.warning("errors = ${response.errors}")
+                throw interpretSudoIdentityVerificationError(response.errors.first())
+            }
+
+            return response.data?.getIdentityVerificationCapabilities?.faceImageRequiredWithDocumentCapture
                 ?: false
         } catch (e: Throwable) {
             logger.warning("unexpected error $e")
