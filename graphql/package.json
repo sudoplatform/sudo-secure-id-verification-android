@@ -10,12 +10,13 @@
     "node": ">=20 <21"
   },
   "devDependencies": {
-    "@babel/core": "^7.24.7",
+    "@babel/core": "^7.27.7",
     "@graphql-codegen/add": "^5.0.3",
-    "@graphql-codegen/cli": "^5.0.2",
+    "@graphql-codegen/cli": "^5.0.7",
     "@graphql-codegen/introspection": "^4.0.3",
-    "@types/node": "^18.19.36",
-    "graphql": "^16.8.2",
-    "typescript": "^5.4.5"
-  }
+    "@types/node": "^20.19.2",
+    "graphql": "^16.11.0",
+    "typescript": "^5.8.3"
+  },
+  "packageManager": "yarn@4.9.2+sha512.1fc009bc09d13cfd0e19efa44cbfc2b9cf6ca61482725eb35bbc5e257e093ebf4130db6dfe15d604ff4b79efd8e1e8e99b25fa7d0a6197c9f9826358d4d65c3c"
 }

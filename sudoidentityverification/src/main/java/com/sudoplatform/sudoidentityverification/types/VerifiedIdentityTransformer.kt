@@ -16,6 +16,7 @@ internal object VerifiedIdentityTransformer {
             acceptableDocumentTypes = graphql.acceptableDocumentTypes.map() { it.toIdDocumentType() },
             documentVerificationStatus = graphql.documentVerificationStatus.toDocumentVerificationStatus(),
             verificationLastAttemptedAt = graphql.verificationLastAttemptedAtEpochMs.let { Date(it.toLong()) },
+            attemptsRemaining = graphql.attemptsRemaining,
         )
     }
 }

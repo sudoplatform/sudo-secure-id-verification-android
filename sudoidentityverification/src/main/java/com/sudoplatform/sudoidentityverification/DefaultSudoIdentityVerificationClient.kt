@@ -69,7 +69,7 @@ class DefaultSudoIdentityVerificationClient(
         private const val ERROR_ALREADY_VERIFIED = "IdentityAlreadyVerifiedError"
     }
 
-    override val version: String = "18.0.0"
+    override val version: String = "18.1.0"
 
     /**
      * GraphQL client used for calling Sudo service API.

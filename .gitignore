@@ -50,5 +50,7 @@ dist/
 node_modules/
 aws-exports.js
 awsconfiguration.json
+.yarn/install-state.gz
 
 identity-system-test-config
+graphql/.yarn/install-state.gz

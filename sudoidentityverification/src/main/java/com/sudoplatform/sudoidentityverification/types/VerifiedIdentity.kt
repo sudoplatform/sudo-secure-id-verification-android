@@ -32,4 +32,5 @@ data class VerifiedIdentity(
     val acceptableDocumentTypes: List<IdDocumentType>,
     val documentVerificationStatus: DocumentVerificationStatus,
     val verificationLastAttemptedAt: Date,
+    val attemptsRemaining: Int,
 )

@@ -9,4 +9,5 @@ fragment VerifiedIdentity on VerifiedIdentity {
   acceptableDocumentTypes
   documentVerificationStatus
   verificationLastAttemptedAtEpochMs
+  attemptsRemaining
 }

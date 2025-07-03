@@ -9,6 +9,7 @@ type VerifiedIdentity @aws_cognito_user_pools {
   acceptableDocumentTypes: [String!]!
   documentVerificationStatus: String!
   verificationLastAttemptedAtEpochMs: Float!
+  attemptsRemaining: Int!
 }
 
 input VerifyIdentityInput {
