@@ -70,6 +70,25 @@ sealed class SudoIdentityVerificationException(message: String? = null, cause: T
         SudoIdentityVerificationException(message = message, cause = cause)
 
     /**
+     * Identity document capture attempts has been exceeded.
+     */
+    class IdentityCaptureRetriesExceededException(message: String? = null, cause: Throwable? = null) :
+        SudoIdentityVerificationException(message = message, cause = cause)
+
+    /**
+     * Identity document capture additional attempts has been prevented.
+     */
+    class IdentityCaptureRetryBlockedException(message: String? = null, cause: Throwable? = null) :
+        SudoIdentityVerificationException(message = message, cause = cause)
+
+    /**
+     * Identity data retrieval attempted for a user whose data has been redacted due to
+     * policy or is no longer available.
+     */
+    class IdentityDataRedactedException(message: String? = null, cause: Throwable? = null) :
+        SudoIdentityVerificationException(message = message, cause = cause)
+
+    /**
      * Indicates the user is not signed in but requested an operation that requires authentication.
      */
     class NotSignedInException(message: String? = null, cause: Throwable? = null) :

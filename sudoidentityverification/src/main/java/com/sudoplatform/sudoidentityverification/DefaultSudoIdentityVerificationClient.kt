@@ -66,7 +66,11 @@ class DefaultSudoIdentityVerificationClient(
         private const val ERROR_UNSUPPORTED_NETWORK_LOCATION = "UnsupportedNetworkLocationError"
         private const val ERROR_REQUIRED_IDENTITY_INFORMATION_NOT_PROVIDED =
             "RequiredIdentityInformationNotProvidedError"
-        private const val ERROR_ALREADY_VERIFIED = "IdentityAlreadyVerifiedError"
+        private const val ERROR_IDENTITY_ALREADY_VERIFIED = "IdentityAlreadyVerifiedError"
+        private const val ERROR_IDENTITY_CAPTURE_RETRIES_EXCEEDED =
+            "IdentityCaptureRetriesExceededError"
+        private const val ERROR_IDENTITY_CAPTURE_RETRY_BLOCKED = "IdentityCaptureRetryBlockedError"
+        private const val ERROR_IDENTITY_DATA_REDACTED = "IdentityDataRedactedError"
     }
 
     override val version: String = "18.1.0"
@@ -440,8 +444,14 @@ class DefaultSudoIdentityVerificationClient(
             return SudoIdentityVerificationException.UnsupportedNetworkLocationException(message = error)
         } else if (error.contains(ERROR_REQUIRED_IDENTITY_INFORMATION_NOT_PROVIDED)) {
             return SudoIdentityVerificationException.RequiredIdentityInformationNotProvidedException(message = error)
-        } else if (error.contains(ERROR_ALREADY_VERIFIED)) {
+        } else if (error.contains(ERROR_IDENTITY_ALREADY_VERIFIED)) {
             return SudoIdentityVerificationException.IdentityAlreadyVerifiedException(message = error)
+        } else if (error.contains(ERROR_IDENTITY_CAPTURE_RETRIES_EXCEEDED)) {
+            return SudoIdentityVerificationException.IdentityCaptureRetriesExceededException(message = error)
+        } else if (error.contains(ERROR_IDENTITY_CAPTURE_RETRY_BLOCKED)) {
+            return SudoIdentityVerificationException.IdentityCaptureRetryBlockedException(message = error)
+        } else if (error.contains(ERROR_IDENTITY_DATA_REDACTED)) {
+            return SudoIdentityVerificationException.IdentityDataRedactedException(message = error)
         }
         return SudoIdentityVerificationException.FailedException(e.toString())
     }

@@ -112,5 +112,11 @@
       <packageUrl regex="true">^pkg:maven/com\.google\.protobuf/protobuf\-java@.*$</packageUrl>
       <cve>CVE-2024-7254</cve>
 </suppress>
+<suppress until="2025-08-31">
+      <notes><![CDATA[
+   file name: gson-2.10.1
+   ]]></notes>
+      <packageUrl regex="true">^pkg:maven/com\.google\.code\.gson/gson@.*$</packageUrl>
+      <cve>CVE-2025-53864</cve>
+</suppress>
 </suppressions>
-
