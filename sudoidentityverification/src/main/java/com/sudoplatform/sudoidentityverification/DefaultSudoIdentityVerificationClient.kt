@@ -9,7 +9,7 @@ package com.sudoplatform.sudoidentityverification
 import android.content.Context
 import com.amazonaws.services.cognitoidentity.model.NotAuthorizedException
 import com.amplifyframework.api.graphql.GraphQLResponse
-import com.apollographql.apollo3.api.Optional
+import com.apollographql.apollo.api.Optional
 import com.sudoplatform.sudoapiclient.ApiClientManager
 import com.sudoplatform.sudoidentityverification.graphql.CaptureAndVerifyIdentityDocumentMutation
 import com.sudoplatform.sudoidentityverification.graphql.CheckIdentityVerificationQuery
@@ -48,7 +48,6 @@ class DefaultSudoIdentityVerificationClient(
     private val logger: Logger = DefaultLogger.instance,
     graphQLClient: GraphQLClient? = null,
 ) : SudoIdentityVerificationClient {
-
     companion object {
         private const val KNOWLEDGE_OF_PII = "KNOWLEDGE_OF_PII"
         private const val GOVERNMENT_ID = "GOVERNMENT_ID"
@@ -223,10 +222,11 @@ class DefaultSudoIdentityVerificationClient(
         }
 
         try {
-            val response = this.graphQLClient.query<CheckIdentityVerificationQuery, CheckIdentityVerificationQuery.Data>(
-                CheckIdentityVerificationQuery.OPERATION_DOCUMENT,
-                emptyMap(),
-            )
+            val response =
+                this.graphQLClient.query<CheckIdentityVerificationQuery, CheckIdentityVerificationQuery.Data>(
+                    CheckIdentityVerificationQuery.OPERATION_DOCUMENT,
+                    emptyMap(),
+                )
 
             if (response.hasErrors()) {
                 logger.warning("errors = ${response.errors}")
@@ -256,22 +256,24 @@ class DefaultSudoIdentityVerificationClient(
         }
 
         try {
-            val mutationInput = VerifyIdentityMutationInput(
-                verificationMethod = KNOWLEDGE_OF_PII,
-                firstName = input.firstName,
-                lastName = input.lastName,
-                address = input.address,
-                city = Optional.presentIfNotNull(input.city),
-                state = Optional.presentIfNotNull(input.state),
-                postalCode = input.postalCode,
-                country = input.country,
-                dateOfBirth = input.dateOfBirth,
-            )
+            val mutationInput =
+                VerifyIdentityMutationInput(
+                    verificationMethod = KNOWLEDGE_OF_PII,
+                    firstName = input.firstName,
+                    lastName = input.lastName,
+                    address = input.address,
+                    city = Optional.presentIfNotNull(input.city),
+                    state = Optional.presentIfNotNull(input.state),
+                    postalCode = input.postalCode,
+                    country = input.country,
+                    dateOfBirth = input.dateOfBirth,
+                )
 
-            val response = this.graphQLClient.mutate<VerifyIdentityMutation, VerifyIdentityMutation.Data>(
-                VerifyIdentityMutation.OPERATION_DOCUMENT,
-                mapOf("input" to Optional.presentIfNotNull(mutationInput)),
-            )
+            val response =
+                this.graphQLClient.mutate<VerifyIdentityMutation, VerifyIdentityMutation.Data>(
+                    VerifyIdentityMutation.OPERATION_DOCUMENT,
+                    mapOf("input" to Optional.presentIfNotNull(mutationInput)),
+                )
 
             if (response.hasErrors()) {
                 logger.warning("errors = ${response.errors}")
@@ -301,19 +303,21 @@ class DefaultSudoIdentityVerificationClient(
         }
 
         try {
-            val mutationInput = VerifyIdentityDocumentMutationInput(
-                verificationMethod = GOVERNMENT_ID,
-                imageBase64 = input.imageBase64,
-                backImageBase64 = input.backImageBase64,
-                faceImageBase64 = Optional.presentIfNotNull(input.faceImageBase64),
-                country = input.country,
-                documentType = input.documentType.type,
-            )
+            val mutationInput =
+                VerifyIdentityDocumentMutationInput(
+                    verificationMethod = GOVERNMENT_ID,
+                    imageBase64 = input.imageBase64,
+                    backImageBase64 = input.backImageBase64,
+                    faceImageBase64 = Optional.presentIfNotNull(input.faceImageBase64),
+                    country = input.country,
+                    documentType = input.documentType.type,
+                )
 
-            val response = this.graphQLClient.mutate<VerifyIdentityDocumentMutation, VerifyIdentityDocumentMutation.Data>(
-                VerifyIdentityDocumentMutation.OPERATION_DOCUMENT,
-                mapOf("input" to Optional.presentIfNotNull(mutationInput)),
-            )
+            val response =
+                this.graphQLClient.mutate<VerifyIdentityDocumentMutation, VerifyIdentityDocumentMutation.Data>(
+                    VerifyIdentityDocumentMutation.OPERATION_DOCUMENT,
+                    mapOf("input" to Optional.presentIfNotNull(mutationInput)),
+                )
 
             if (response.hasErrors()) {
                 logger.warning("errors = ${response.errors}")
@@ -343,18 +347,20 @@ class DefaultSudoIdentityVerificationClient(
         }
 
         try {
-            val mutationInput = VerifyIdentityDocumentMutationInput(
-                verificationMethod = GOVERNMENT_ID,
-                imageBase64 = input.imageBase64,
-                backImageBase64 = input.backImageBase64,
-                faceImageBase64 = Optional.presentIfNotNull(input.faceImageBase64),
-                country = input.country,
-                documentType = input.documentType.type,
-            )
-            val response = this.graphQLClient.mutate<CaptureAndVerifyIdentityDocumentMutation, CaptureAndVerifyIdentityDocumentMutation.Data>(
-                CaptureAndVerifyIdentityDocumentMutation.OPERATION_DOCUMENT,
-                mapOf("input" to Optional.presentIfNotNull(mutationInput)),
-            )
+            val mutationInput =
+                VerifyIdentityDocumentMutationInput(
+                    verificationMethod = GOVERNMENT_ID,
+                    imageBase64 = input.imageBase64,
+                    backImageBase64 = input.backImageBase64,
+                    faceImageBase64 = Optional.presentIfNotNull(input.faceImageBase64),
+                    country = input.country,
+                    documentType = input.documentType.type,
+                )
+            val response =
+                this.graphQLClient.mutate<CaptureAndVerifyIdentityDocumentMutation, CaptureAndVerifyIdentityDocumentMutation.Data>(
+                    CaptureAndVerifyIdentityDocumentMutation.OPERATION_DOCUMENT,
+                    mapOf("input" to Optional.presentIfNotNull(mutationInput)),
+                )
 
             if (response.hasErrors()) {
                 logger.warning("errors = ${response.errors}")
@@ -384,10 +390,11 @@ class DefaultSudoIdentityVerificationClient(
         }
 
         try {
-            val response = this.graphQLClient.mutate<InitiateIdentityDocumentCaptureMutation, InitiateIdentityDocumentCaptureMutation.Data>(
-                InitiateIdentityDocumentCaptureMutation.OPERATION_DOCUMENT,
-                emptyMap(),
-            )
+            val response =
+                this.graphQLClient.mutate<InitiateIdentityDocumentCaptureMutation, InitiateIdentityDocumentCaptureMutation.Data>(
+                    InitiateIdentityDocumentCaptureMutation.OPERATION_DOCUMENT,
+                    emptyMap(),
+                )
 
             if (response.hasErrors()) {
                 logger.warning("errors = ${response.errors}")
@@ -456,12 +463,11 @@ class DefaultSudoIdentityVerificationClient(
         return SudoIdentityVerificationException.FailedException(e.toString())
     }
 
-    private fun interpretSudoIdentityVerificationException(e: Throwable): Throwable {
-        return when (e) {
+    private fun interpretSudoIdentityVerificationException(e: Throwable): Throwable =
+        when (e) {
             is CancellationException,
             is SudoIdentityVerificationException,
             -> e
             else -> SudoIdentityVerificationException.UnknownException(e)
         }
-    }
 }

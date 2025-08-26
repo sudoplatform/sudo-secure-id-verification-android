@@ -20,19 +20,23 @@ import com.sudoplatform.sudouser.amplify.GraphQLClient
  * Interface encapsulating a library for interacting with the Sudo Platform Identity Verification service.
  */
 interface SudoIdentityVerificationClient {
-
     companion object {
         /**
          * Creates a [Builder] for [SudoIdentityVerificationClient].
          */
-        fun builder(context: Context, sudoUserClient: SudoUserClient) =
-            Builder(context, sudoUserClient)
+        fun builder(
+            context: Context,
+            sudoUserClient: SudoUserClient,
+        ) = Builder(context, sudoUserClient)
     }
 
     /**
      * Builder used to construct [SudoIdentityVerificationClient].
      */
-    class Builder(private val context: Context, private val sudoUserClient: SudoUserClient) {
+    class Builder(
+        private val context: Context,
+        private val sudoUserClient: SudoUserClient,
+    ) {
         private var graphQLClient: GraphQLClient? = null
         private var logger: Logger? = null
 
@@ -41,23 +45,25 @@ interface SudoIdentityVerificationClient {
          * supplied, a [GraphQLClient] will be obtained from [ApiClientManager]. This is mainly
          * used for unit testing.
          */
-        fun setGraphQLClient(graphQLClient: GraphQLClient) = also {
-            this.graphQLClient = graphQLClient
-        }
+        fun setGraphQLClient(graphQLClient: GraphQLClient) =
+            also {
+                this.graphQLClient = graphQLClient
+            }
 
         /**
          * Provide the implementation of the [Logger] used for logging. If a value is not supplied
          * a default implementation will be used.
          */
-        fun setLogger(logger: Logger) = also {
-            this.logger = logger
-        }
+        fun setLogger(logger: Logger) =
+            also {
+                this.logger = logger
+            }
 
         /**
          * Constructs and returns an [SudoIdentityVerificationClient].
          */
-        fun build(): SudoIdentityVerificationClient {
-            return DefaultSudoIdentityVerificationClient(
+        fun build(): SudoIdentityVerificationClient =
+            DefaultSudoIdentityVerificationClient(
                 this.context,
                 this.sudoUserClient,
                 this.logger ?: DefaultLogger.instance,
@@ -66,7 +72,6 @@ interface SudoIdentityVerificationClient {
                     this.sudoUserClient,
                 ),
             )
-        }
     }
 
     /**

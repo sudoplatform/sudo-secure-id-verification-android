@@ -9,7 +9,9 @@ package com.sudoplatform.sudoidentityverification.types
 /**
  * Status of document verification process for an identity
  */
-enum class DocumentVerificationStatus(val type: String) {
+enum class DocumentVerificationStatus(
+    val type: String,
+) {
     NOT_REQUIRED("notRequired"),
     NOT_ATTEMPTED("notAttempted"),
     PENDING("pending"),

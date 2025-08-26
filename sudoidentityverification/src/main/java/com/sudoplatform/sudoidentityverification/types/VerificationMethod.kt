@@ -9,7 +9,9 @@ package com.sudoplatform.sudoidentityverification.types
 /**
  * Verification method used for identity verification.
  */
-enum class VerificationMethod(val type: String) {
+enum class VerificationMethod(
+    val type: String,
+) {
     NONE("NONE"),
     KNOWLEDGE_OF_PII("KNOWLEDGE_OF_PII"),
     GOVERNMENT_ID("GOVERNMENT_ID"),

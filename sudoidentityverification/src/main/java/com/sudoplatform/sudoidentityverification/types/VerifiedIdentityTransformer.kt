@@ -4,8 +4,8 @@ import java.util.Date
 import com.sudoplatform.sudoidentityverification.graphql.fragment.VerifiedIdentity as GraphQLVerifiedIdentity
 
 internal object VerifiedIdentityTransformer {
-    public fun toEntity(graphql: GraphQLVerifiedIdentity): VerifiedIdentity {
-        return VerifiedIdentity(
+    public fun toEntity(graphql: GraphQLVerifiedIdentity): VerifiedIdentity =
+        VerifiedIdentity(
             owner = graphql.owner,
             verified = graphql.verified,
             verifiedAt = graphql.verifiedAtEpochMs.let { Date(it.toLong()) },
@@ -13,12 +13,11 @@ internal object VerifiedIdentityTransformer {
             canAttemptVerificationAgain = graphql.canAttemptVerificationAgain,
             idScanUrl = graphql.idScanUrl,
             requiredVerificationMethod = graphql.requiredVerificationMethod?.toVerificationMethod(),
-            acceptableDocumentTypes = graphql.acceptableDocumentTypes.map() { it.toIdDocumentType() },
+            acceptableDocumentTypes = graphql.acceptableDocumentTypes.map { it.toIdDocumentType() },
             documentVerificationStatus = graphql.documentVerificationStatus.toDocumentVerificationStatus(),
             verificationLastAttemptedAt = graphql.verificationLastAttemptedAtEpochMs.let { Date(it.toLong()) },
             attemptsRemaining = graphql.attemptsRemaining,
         )
-    }
 }
 
 internal fun String.toVerificationMethod(): VerificationMethod {

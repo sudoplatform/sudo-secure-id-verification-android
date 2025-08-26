@@ -9,7 +9,9 @@ package com.sudoplatform.sudoidentityverification.types
 /**
  * Type of document used for identity verification.
  */
-enum class IdDocumentType(val type: String) {
+enum class IdDocumentType(
+    val type: String,
+) {
     DRIVER_LICENSE("driverLicense"),
     PASSPORT("passport"),
     ID_CARD("idCard"),

@@ -12,7 +12,7 @@ Please see the [Sudo Platform Developer Docs](https://sudoplatform.com/docs) for
 | Technology             | Supported version |
 | ---------------------- | ----------------- |
 | Min. API Level         | 26                |
-| Kotlin version         | 1.9+              |
+| Kotlin version         | 2.1+              |
 
 ## Integration Instructions
 Visit the [Secure ID Verification section](https://sudoplatform.com/docs) of the Sudo Platform Developer Docs for SDK integration instructions.

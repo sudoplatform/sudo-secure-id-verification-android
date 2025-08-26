@@ -13,14 +13,13 @@ jacoco {
 android {
     namespace "com.sudoplatform.sudoidentityverification"
 
-    compileSdk 34
+    compileSdkVersion 35
 
     defaultConfig {
         minSdkVersion 26
-        targetSdkVersion 34
+        targetSdkVersion 35
         versionCode 1
-        versionName "18.1.0"
-
+        versionName "19.0.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         testApplicationId = "com.sudoplatform.sudoidentityverification.test"
     }
@@ -46,6 +45,7 @@ android {
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
+        coreLibraryDesugaringEnabled true
     }
 
     kotlinOptions {
@@ -79,10 +79,13 @@ android {
 }
 
 ext {
-    coroutine_version = '1.8.1'
+    coroutine_version = '1.10.2'
 }
 
 dependencies {
+    // Core library desugaring
+    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.1.5'
+
     // Kotlin
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutine_version"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutine_version"
@@ -99,34 +102,34 @@ dependencies {
     implementation "com.amplifyframework:aws-api-appsync:$amplify_version"
     implementation "com.amplifyframework:aws-api:$amplify_version"
 
-    // apollo codegen
-    implementation("com.apollographql.apollo3:apollo-runtime:4.0.0-beta.7")
+    // Apollo Codegen
+    implementation("com.apollographql.apollo:apollo-runtime:4.3.2")
 
     // Sudo Platform SDKs.
-    implementation 'com.sudoplatform:sudologging:5.0.0'
-    implementation "com.sudoplatform:sudouser:20.0.0"
-    implementation 'com.sudoplatform:sudoapiclient:11.0.0'
+    implementation 'com.sudoplatform:sudologging:6.0.0'
+    implementation "com.sudoplatform:sudouser:21.0.0"
+    implementation 'com.sudoplatform:sudoapiclient:12.0.0'
 
     // Testing
     testImplementation 'junit:junit:4.13.2'
     testImplementation "io.kotlintest:kotlintest-assertions:3.4.2"
     testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutine_version"
     testImplementation "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
-    testImplementation 'org.mockito:mockito-core:5.12.0'
-    testImplementation 'org.mockito.kotlin:mockito-kotlin:5.3.1'
-    testImplementation "androidx.test:core:1.6.1"
+    testImplementation 'org.mockito:mockito-core:5.19.0'
+    testImplementation 'org.mockito.kotlin:mockito-kotlin:6.0.0'
+    testImplementation "androidx.test:core:1.7.0"
     testImplementation "com.jakewharton.timber:timber:5.0.1"
-    testImplementation 'org.json:json:20240303'
+    testImplementation 'org.json:json:20250517'
     testImplementation "com.amazonaws:aws-android-sdk-cognitoauth:$aws_version!!"
 
-    androidTestImplementation 'androidx.test:runner:1.6.1'
-    androidTestImplementation 'androidx.test:rules:1.6.1'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.6.1'
+    androidTestImplementation 'androidx.test:runner:1.7.0'
+    androidTestImplementation 'androidx.test:rules:1.7.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.7.0'
     androidTestImplementation "io.kotlintest:kotlintest-assertions:3.4.2"
 
-    androidTestImplementation 'com.sudoplatform:sudokeymanager:8.0.0'
-    androidTestImplementation 'com.sudoplatform:sudoentitlementsadmin:10.0.0'
-    androidTestImplementation 'com.sudoplatform:sudoentitlements:12.0.2'
+    androidTestImplementation 'com.sudoplatform:sudokeymanager:9.0.0'
+    androidTestImplementation 'com.sudoplatform:sudoentitlementsadmin:11.0.0'
+    androidTestImplementation 'com.sudoplatform:sudoentitlements:13.0.0'
 }
 
 tasks.register('jacocoTestReport', JacocoReport) {
@@ -185,12 +188,8 @@ afterEvaluate {
         suppressionFile file("../dependency-suppression.xml").toString()
         failBuildOnCVSS 0
         skipConfigurations = getConfigurationsToSkip(configurations)
-
-        cve {
-            urlModified = "https://anonyome-nist-cve-mirror.s3.amazonaws.com/nvdcve-1.1-modified.json.gz"
-            urlBase = "https://anonyome-nist-cve-mirror.s3.amazonaws.com/nvdcve-1.1-%d.json.gz"
-            startYear = 2002
-            waitTime = 0
+        nvd {
+            datafeedUrl = "https://anonyome-nist-cve-mirror.s3.amazonaws.com/"
         }
         
         analyzers {
@@ -202,8 +201,12 @@ afterEvaluate {
             }
         }
     }
-    tasks.named("sourceReleaseJar") {
-        dependsOn("generateServiceApolloSources")
+
+    // Configure asset copying for all variants
+    android.libraryVariants.all { variant ->
+        variant.mergeAssetsProvider.configure {
+            dependsOn 'copyIntegrationTestData'
+        }
     }
 }
 
@@ -232,7 +235,7 @@ tasks.register('checkLicenseHaveRequiredFields') {
                     errors.append("License entry '${artifact.artifact}' is missing required element `$field`\n")
                 }
             }
-            if (artifact["license"] == null && artifact["licenseUrl" == null]) {
+            if (artifact["license"] == null && artifact["licenseUrl"] == null) {
                 errors.append("License entry '${artifact.artifact}' must have one of [license,licenseUrl]\n")
             }
         }
@@ -247,23 +250,32 @@ checkLicenses.finalizedBy checkLicenseHaveRequiredFields
 apply plugin: 'org.jmailen.kotlinter'
 
 kotlinter {
-    ignoreFailures = false
     reporters = ['checkstyle', 'plain']
 }
 
+import org.jmailen.gradle.kotlinter.tasks.FormatTask
+import org.jmailen.gradle.kotlinter.tasks.LintTask
+
 // Exclude the apollographql-generated classes from linting
-tasks.formatKotlinMain {
+tasks.withType(FormatTask) {
     exclude { it.file.path.contains("generated/")}
 }
 
-tasks.lintKotlinMain {
+tasks.withType(LintTask) {
     exclude { it.file.path.contains("generated/")}
 }
 
-apply plugin: "com.apollographql.apollo3"
+apply plugin: "com.apollographql.apollo"
 apollo {
     service("service") {
         packageName.set("com.sudoplatform.sudoidentityverification.graphql")
+    }
+}
+
+// Configure Apollo tasks to handle incremental build issues
+afterEvaluate {
+    tasks.withType(Task).matching { it.name.contains("generateServiceApolloSources") }.configureEach {
+        doNotTrackState("Apollo source generation can have incremental build issues with missing output files")
     }
 }
 
@@ -302,9 +314,4 @@ else if (project.file("${rootProject.projectDir}/util/publish-internal-android.g
 tasks.register('copyIntegrationTestData', Copy) {
     from layout.projectDirectory.dir('../sudo-identity-verification-test-data/data/id-document-images/simulator')
     into layout.projectDirectory.dir('src/main/assets')
-}
-
-afterEvaluate {
-    packageDebugAssets.dependsOn 'copyIntegrationTestData'
-    mergeDebugAssets.dependsOn 'copyIntegrationTestData'
 }
