@@ -124,6 +124,15 @@ sealed class SudoIdentityVerificationException(
     ) : SudoIdentityVerificationException(message = message, cause = cause)
 
     /**
+     * An identity data processing operation was called in an environment which requires consent,
+     * and consent had not been provided.
+     */
+    class ConsentRequiredException(
+        message: String? = null,
+        cause: Throwable? = null,
+    ) : SudoIdentityVerificationException(message = message, cause = cause)
+
+    /**
      * Internal server error occurred in Identity Verification service.
      */
     class InternalServerException(

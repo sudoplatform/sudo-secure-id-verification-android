@@ -1,0 +1,11 @@
+query GetIdentityDataProcessingConsentStatus {
+  getIdentityDataProcessingConsentStatus {
+    consented
+    consentedAtEpochMs
+    consentWithdrawnAtEpochMs
+    content
+    contentType
+    locale
+  }
+}
+

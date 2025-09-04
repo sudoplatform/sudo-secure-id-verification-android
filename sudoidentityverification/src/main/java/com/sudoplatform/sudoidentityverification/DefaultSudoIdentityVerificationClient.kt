@@ -13,14 +13,22 @@ import com.apollographql.apollo.api.Optional
 import com.sudoplatform.sudoapiclient.ApiClientManager
 import com.sudoplatform.sudoidentityverification.graphql.CaptureAndVerifyIdentityDocumentMutation
 import com.sudoplatform.sudoidentityverification.graphql.CheckIdentityVerificationQuery
+import com.sudoplatform.sudoidentityverification.graphql.GetIdentityDataProcessingConsentContentQuery
+import com.sudoplatform.sudoidentityverification.graphql.GetIdentityDataProcessingConsentStatusQuery
 import com.sudoplatform.sudoidentityverification.graphql.GetIdentityVerificationCapabilitiesQuery
 import com.sudoplatform.sudoidentityverification.graphql.InitiateIdentityDocumentCaptureMutation
+import com.sudoplatform.sudoidentityverification.graphql.ProvideIdentityDataProcessingConsentMutation
 import com.sudoplatform.sudoidentityverification.graphql.VerifyIdentityDocumentMutation
 import com.sudoplatform.sudoidentityverification.graphql.VerifyIdentityMutation
+import com.sudoplatform.sudoidentityverification.graphql.WithdrawIdentityDataProcessingConsentMutation
+import com.sudoplatform.sudoidentityverification.types.IdentityDataProcessingConsentContent
+import com.sudoplatform.sudoidentityverification.types.IdentityDataProcessingConsentStatus
 import com.sudoplatform.sudoidentityverification.types.IdentityDocumentCaptureInitiationInfo
 import com.sudoplatform.sudoidentityverification.types.IdentityDocumentCaptureInitiationInfoTransformer
 import com.sudoplatform.sudoidentityverification.types.VerifiedIdentity
 import com.sudoplatform.sudoidentityverification.types.VerifiedIdentityTransformer
+import com.sudoplatform.sudoidentityverification.types.inputs.IdentityDataProcessingConsentContentInput
+import com.sudoplatform.sudoidentityverification.types.inputs.IdentityDataProcessingConsentInput
 import com.sudoplatform.sudoidentityverification.types.inputs.VerifyIdentityDocumentInput
 import com.sudoplatform.sudoidentityverification.types.inputs.VerifyIdentityInput
 import com.sudoplatform.sudologging.Logger
@@ -30,6 +38,8 @@ import com.sudoplatform.sudouser.exceptions.GRAPHQL_ERROR_TYPE
 import com.sudoplatform.sudouser.exceptions.HTTP_STATUS_CODE_KEY
 import java.net.HttpURLConnection
 import java.util.concurrent.CancellationException
+import com.sudoplatform.sudoidentityverification.graphql.type.IdentityDataProcessingConsentContentInput as GraphQLIdentityDataProcessingConsentContentInput
+import com.sudoplatform.sudoidentityverification.graphql.type.IdentityDataProcessingConsentInput as GraphQLIdentityDataProcessingConsentInput
 import com.sudoplatform.sudoidentityverification.graphql.type.VerifyIdentityDocumentInput as VerifyIdentityDocumentMutationInput
 import com.sudoplatform.sudoidentityverification.graphql.type.VerifyIdentityInput as VerifyIdentityMutationInput
 
@@ -70,9 +80,10 @@ class DefaultSudoIdentityVerificationClient(
             "IdentityCaptureRetriesExceededError"
         private const val ERROR_IDENTITY_CAPTURE_RETRY_BLOCKED = "IdentityCaptureRetryBlockedError"
         private const val ERROR_IDENTITY_DATA_REDACTED = "IdentityDataRedactedError"
+        private const val ERROR_CONSENT_REQUIRED = "ConsentRequiredError"
     }
 
-    override val version: String = "18.1.0"
+    override val version: String = "20.0.0"
 
     /**
      * GraphQL client used for calling Sudo service API.
@@ -202,6 +213,38 @@ class DefaultSudoIdentityVerificationClient(
             }
 
             return response.data?.getIdentityVerificationCapabilities?.canInitiateDocumentCapture
+                ?: false
+        } catch (e: Throwable) {
+            logger.warning("unexpected error $e")
+            when (e) {
+                is NotAuthorizedException -> throw SudoIdentityVerificationException.AuthenticationException(
+                    cause = e,
+                )
+                else -> throw interpretSudoIdentityVerificationException(e)
+            }
+        }
+    }
+
+    override suspend fun isConsentRequiredForVerification(): Boolean {
+        this.logger.info("Retrieves the flag for whether consent is required for verification.")
+
+        if (!this.sudoUserClient.isSignedIn()) {
+            throw SudoIdentityVerificationException.NotSignedInException()
+        }
+
+        try {
+            val response =
+                this.graphQLClient.query<GetIdentityVerificationCapabilitiesQuery, GetIdentityVerificationCapabilitiesQuery.Data>(
+                    GetIdentityVerificationCapabilitiesQuery.OPERATION_DOCUMENT,
+                    emptyMap(),
+                )
+
+            if (response.hasErrors()) {
+                logger.warning("errors = ${response.errors}")
+                throw interpretSudoIdentityVerificationError(response.errors.first())
+            }
+
+            return response.data?.getIdentityVerificationCapabilities?.consentRequired
                 ?: false
         } catch (e: Throwable) {
             logger.warning("unexpected error $e")
@@ -416,6 +459,169 @@ class DefaultSudoIdentityVerificationClient(
         }
     }
 
+    override suspend fun provideIdentityDataProcessingConsent(input: IdentityDataProcessingConsentInput): Boolean {
+        this.logger.info("Providing identity data processing consent.")
+
+        if (!this.sudoUserClient.isSignedIn()) {
+            throw SudoIdentityVerificationException.NotSignedInException()
+        }
+
+        try {
+            val mutationInput =
+                GraphQLIdentityDataProcessingConsentInput(
+                    content = input.content,
+                    contentType = input.contentType,
+                    locale = input.locale,
+                )
+            val response =
+                this.graphQLClient.mutate<ProvideIdentityDataProcessingConsentMutation, ProvideIdentityDataProcessingConsentMutation.Data>(
+                    ProvideIdentityDataProcessingConsentMutation.OPERATION_DOCUMENT,
+                    mapOf("input" to mutationInput),
+                )
+
+            if (response.hasErrors()) {
+                logger.warning("errors = ${response.errors}")
+                throw interpretSudoIdentityVerificationError(response.errors.first())
+            }
+            val result = response.data?.provideIdentityDataProcessingConsent
+            result?.let {
+                return result.processed
+            }
+            throw SudoIdentityVerificationException.FailedException("Mutation succeeded but output was null.")
+        } catch (e: Throwable) {
+            logger.warning("unexpected error $e")
+            when (e) {
+                is NotAuthorizedException -> throw SudoIdentityVerificationException.AuthenticationException(
+                    cause = e,
+                )
+                else -> throw interpretSudoIdentityVerificationException(e)
+            }
+        }
+    }
+
+    override suspend fun withdrawIdentityDataProcessingConsent(): Boolean {
+        this.logger.info("Withdrawing identity data processing consent.")
+
+        if (!this.sudoUserClient.isSignedIn()) {
+            throw SudoIdentityVerificationException.NotSignedInException()
+        }
+
+        try {
+            val response =
+                this.graphQLClient
+                    .mutate<WithdrawIdentityDataProcessingConsentMutation, WithdrawIdentityDataProcessingConsentMutation.Data>(
+                        WithdrawIdentityDataProcessingConsentMutation.OPERATION_DOCUMENT,
+                        emptyMap(),
+                    )
+
+            if (response.hasErrors()) {
+                logger.warning("errors = ${response.errors}")
+                throw interpretSudoIdentityVerificationError(response.errors.first())
+            }
+            val result = response.data?.withdrawIdentityDataProcessingConsent
+            result?.let {
+                return result.processed
+            }
+            throw SudoIdentityVerificationException.FailedException("Mutation succeeded but output was null.")
+        } catch (e: Throwable) {
+            logger.warning("unexpected error $e")
+            when (e) {
+                is NotAuthorizedException -> throw SudoIdentityVerificationException.AuthenticationException(
+                    cause = e,
+                )
+                else -> throw interpretSudoIdentityVerificationException(e)
+            }
+        }
+    }
+
+    override suspend fun getIdentityDataProcessingConsentContent(
+        input: IdentityDataProcessingConsentContentInput,
+    ): IdentityDataProcessingConsentContent {
+        this.logger.info("Retrieving identity data processing consent content.")
+
+        if (!this.sudoUserClient.isSignedIn()) {
+            throw SudoIdentityVerificationException.NotSignedInException()
+        }
+
+        try {
+            val queryInput =
+                GraphQLIdentityDataProcessingConsentContentInput(
+                    preferredLocale = input.preferredLocale,
+                    preferredContentType = input.preferredContentType,
+                )
+            val response =
+                this.graphQLClient.query<GetIdentityDataProcessingConsentContentQuery, GetIdentityDataProcessingConsentContentQuery.Data>(
+                    GetIdentityDataProcessingConsentContentQuery.OPERATION_DOCUMENT,
+                    mapOf(
+                        "input" to queryInput,
+                    ),
+                )
+
+            if (response.hasErrors()) {
+                logger.warning("errors = ${response.errors}")
+                throw interpretSudoIdentityVerificationError(response.errors.first())
+            }
+            val result = response.data?.getIdentityDataProcessingConsentContent
+            result?.let {
+                return IdentityDataProcessingConsentContent(
+                    content = it.content,
+                    contentType = it.contentType,
+                    locale = it.locale,
+                )
+            }
+            throw SudoIdentityVerificationException.FailedException("Query succeeded but output was null.")
+        } catch (e: Throwable) {
+            logger.warning("unexpected error $e")
+            when (e) {
+                is NotAuthorizedException -> throw SudoIdentityVerificationException.AuthenticationException(
+                    cause = e,
+                )
+                else -> throw interpretSudoIdentityVerificationException(e)
+            }
+        }
+    }
+
+    override suspend fun getIdentityDataProcessingConsentStatus(): IdentityDataProcessingConsentStatus {
+        logger.info("Retrieving identity data processing consent status.")
+
+        if (!this.sudoUserClient.isSignedIn()) {
+            throw SudoIdentityVerificationException.NotSignedInException()
+        }
+
+        try {
+            val response =
+                this.graphQLClient.query<GetIdentityDataProcessingConsentStatusQuery, GetIdentityDataProcessingConsentStatusQuery.Data>(
+                    GetIdentityDataProcessingConsentStatusQuery.OPERATION_DOCUMENT,
+                    emptyMap(),
+                )
+
+            if (response.hasErrors()) {
+                logger.warning("errors = ${response.errors}")
+                throw interpretSudoIdentityVerificationError(response.errors.first())
+            }
+            val result = response.data?.getIdentityDataProcessingConsentStatus
+            result?.let {
+                return IdentityDataProcessingConsentStatus(
+                    consented = it.consented,
+                    consentedAtEpochMs = it.consentedAtEpochMs,
+                    consentWithdrawnAtEpochMs = it.consentWithdrawnAtEpochMs,
+                    content = it.content,
+                    contentType = it.contentType,
+                    locale = it.locale,
+                )
+            }
+            throw SudoIdentityVerificationException.FailedException("Query succeeded but output was null.")
+        } catch (e: Throwable) {
+            logger.warning("unexpected error $e")
+            when (e) {
+                is NotAuthorizedException -> throw SudoIdentityVerificationException.AuthenticationException(
+                    cause = e,
+                )
+                else -> throw interpretSudoIdentityVerificationException(e)
+            }
+        }
+    }
+
     override fun reset() {
         this.logger.info("Resetting client.")
     }
@@ -445,6 +651,8 @@ class DefaultSudoIdentityVerificationClient(
             return SudoIdentityVerificationException.ImplausibleAgeException(message = error)
         } else if (error.contains(ERROR_INVALID_AGE)) {
             return SudoIdentityVerificationException.InvalidAgeException(message = error)
+        } else if (error.contains(ERROR_CONSENT_REQUIRED)) {
+            return SudoIdentityVerificationException.ConsentRequiredException(message = error)
         } else if (error.contains(ERROR_UNSUPPORTED_COUNTRY)) {
             return SudoIdentityVerificationException.UnsupportedCountryException(message = error)
         } else if (error.contains(ERROR_UNSUPPORTED_NETWORK_LOCATION)) {

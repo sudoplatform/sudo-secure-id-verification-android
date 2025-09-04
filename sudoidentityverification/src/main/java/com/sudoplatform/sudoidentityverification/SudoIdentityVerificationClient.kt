@@ -8,8 +8,12 @@ package com.sudoplatform.sudoidentityverification
 
 import android.content.Context
 import com.sudoplatform.sudoapiclient.ApiClientManager
+import com.sudoplatform.sudoidentityverification.types.IdentityDataProcessingConsentContent
+import com.sudoplatform.sudoidentityverification.types.IdentityDataProcessingConsentStatus
 import com.sudoplatform.sudoidentityverification.types.IdentityDocumentCaptureInitiationInfo
 import com.sudoplatform.sudoidentityverification.types.VerifiedIdentity
+import com.sudoplatform.sudoidentityverification.types.inputs.IdentityDataProcessingConsentContentInput
+import com.sudoplatform.sudoidentityverification.types.inputs.IdentityDataProcessingConsentInput
 import com.sudoplatform.sudoidentityverification.types.inputs.VerifyIdentityDocumentInput
 import com.sudoplatform.sudoidentityverification.types.inputs.VerifyIdentityInput
 import com.sudoplatform.sudologging.Logger
@@ -70,6 +74,7 @@ interface SudoIdentityVerificationClient {
                 this.graphQLClient ?: ApiClientManager.getClient(
                     this.context,
                     this.sudoUserClient,
+                    "IdentityVerificationService",
                 ),
             )
     }
@@ -124,6 +129,16 @@ interface SudoIdentityVerificationClient {
      */
     @Throws(SudoIdentityVerificationException::class)
     suspend fun isDocumentCaptureInitiationEnabled(): Boolean
+
+    /**
+     * Flag indicating if consent is required to perform identity data processing.
+     *
+     * @return boolean flag.
+     *
+     * @throws [SudoIdentityVerificationException].
+     */
+    @Throws(SudoIdentityVerificationException::class)
+    suspend fun isConsentRequiredForVerification(): Boolean
 
     /**
      * Checks the identity verification status of the currently signed in user.
@@ -183,6 +198,51 @@ interface SudoIdentityVerificationClient {
      */
     @Throws(SudoIdentityVerificationException::class)
     suspend fun initiateIdentityDocumentCapture(): IdentityDocumentCaptureInitiationInfo
+
+    /**
+     * Provides consent for identity data processing.
+     *
+     * @param input [IdentityDataProcessingConsentInput] Parameters for consent content.
+     * @return [Boolean] result.
+     *
+     * @throws [SudoIdentityVerificationException].
+     */
+    @Throws(SudoIdentityVerificationException::class)
+    suspend fun provideIdentityDataProcessingConsent(input: IdentityDataProcessingConsentInput): Boolean
+
+    /**
+     * Withdraws consent for identity data processing.
+     *
+     * @return [Boolean] result.
+     *
+     * @throws [SudoIdentityVerificationException].
+     */
+    @Throws(SudoIdentityVerificationException::class)
+    suspend fun withdrawIdentityDataProcessingConsent(): Boolean
+
+    /**
+     * Retrieves the content for identity data processing consent,
+     *  given the provided preferred content type and locale.
+     *
+     * @param input [IdentityDataProcessingConsentContentInput] Parameters for content retrieval.
+     * @return [IdentityDataProcessingConsentContent] result.
+     *
+     * @throws [SudoIdentityVerificationException].
+     */
+    @Throws(SudoIdentityVerificationException::class)
+    suspend fun getIdentityDataProcessingConsentContent(
+        input: IdentityDataProcessingConsentContentInput,
+    ): IdentityDataProcessingConsentContent
+
+    /**
+     * Retrieves the status of identity data processing consent.
+     *
+     * @return [IdentityDataProcessingConsentStatus] result.
+     *
+     * @throws [SudoIdentityVerificationException].
+     */
+    @Throws(SudoIdentityVerificationException::class)
+    suspend fun getIdentityDataProcessingConsentStatus(): IdentityDataProcessingConsentStatus
 
     /**
      * Reset any internal state and cached content.

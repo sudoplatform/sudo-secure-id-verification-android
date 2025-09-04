@@ -10,4 +10,5 @@ fragment VerifiedIdentity on VerifiedIdentity {
   documentVerificationStatus
   verificationLastAttemptedAtEpochMs
   attemptsRemaining
+  consented
 }

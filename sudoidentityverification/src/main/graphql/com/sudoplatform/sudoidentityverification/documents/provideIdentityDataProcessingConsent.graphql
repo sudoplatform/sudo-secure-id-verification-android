@@ -1,0 +1,6 @@
+mutation ProvideIdentityDataProcessingConsent($input: IdentityDataProcessingConsentInput!) {
+  provideIdentityDataProcessingConsent(input: $input) {
+    processed
+  }
+}
+

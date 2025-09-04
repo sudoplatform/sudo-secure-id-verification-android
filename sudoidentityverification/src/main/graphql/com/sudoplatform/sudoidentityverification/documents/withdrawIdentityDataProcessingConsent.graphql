@@ -1,0 +1,6 @@
+mutation WithdrawIdentityDataProcessingConsent {
+  withdrawIdentityDataProcessingConsent {
+    processed
+  }
+}
+

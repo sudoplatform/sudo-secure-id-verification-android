@@ -33,4 +33,5 @@ data class VerifiedIdentity(
     val documentVerificationStatus: DocumentVerificationStatus,
     val verificationLastAttemptedAt: Date,
     val attemptsRemaining: Int,
+    val consented: Boolean?,
 )

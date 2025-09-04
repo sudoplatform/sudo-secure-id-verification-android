@@ -1,0 +1,8 @@
+query GetIdentityDataProcessingConsentContent($input: IdentityDataProcessingConsentContentInput!) {
+  getIdentityDataProcessingConsentContent(input: $input) {
+    content
+    contentType
+    locale
+  }
+}
+

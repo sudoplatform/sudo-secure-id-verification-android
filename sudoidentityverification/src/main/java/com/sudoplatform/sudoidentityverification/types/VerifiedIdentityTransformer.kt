@@ -17,6 +17,7 @@ internal object VerifiedIdentityTransformer {
             documentVerificationStatus = graphql.documentVerificationStatus.toDocumentVerificationStatus(),
             verificationLastAttemptedAt = graphql.verificationLastAttemptedAtEpochMs.let { Date(it.toLong()) },
             attemptsRemaining = graphql.attemptsRemaining,
+            consented = graphql.consented,
         )
 }
 

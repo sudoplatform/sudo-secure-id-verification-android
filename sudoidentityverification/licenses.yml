@@ -166,56 +166,17 @@
   copyrightHolder: Google, Inc.
   license: The Apache Software License, Version 2.0
   url: https://mvnrepository.com/artifact/com.google.code.gson/gson
-- artifact: com.google.code.findbugs:jsr305:+
-  name: FindBugs-jsr305
-  copyrightHolder: Free Software Foundation, Inc.
-  license: The Apache Software License, Version 2.0
-  licenseUrl: http://www.apache.org/licenses/LICENSE-2.0.txt
-  url: http://findbugs.sourceforge.net/
-- artifact: com.squareup.okhttp3:okhttp:+
-  name: OkHttp
-  copyrightHolder: Square, Inc.
-  license: The Apache Software License, Version 2.0
-  url: https://square.github.io/okhttp/
+- artifact: aws.smithy.kotlin:http-client-engine-okhttp-jvm:+
+  name: http-client-engine-okhttp-jvm
+  copyrightHolder: Square, Inc
+  license: Apache-2.0
+  licenseUrl: https://www.apache.org/licenses/LICENSE-2.0.txt
+  url: https://github.com/smithy-lang/smithy-kotlin
 - artifact: com.amazonaws:aws-android-sdk-core:+
   name: AWS SDK for Android - Core Runtime
   copyrightHolder: Amazon
   url: http://aws.amazon.com/sdkforandroid
   licenseUrl: http://aws.amazon.com/asl/
-- artifact: com.nytimes.android:cache:+
-  name: com.nytimes.android
-  copyrightHolder: New York Times
-  license: Apache License
-  licenseUrl: http://www.apache.org/licenses/
-  url: https://github.com/nytimes/Store/
-- artifact: com.amazonaws:aws-android-sdk-auth-userpools:+
-  name: AWS SDK for Android - AWS Cognito Userpools SignIn
-  copyrightHolder: Amazon
-  license: Amazon Software License
-  url: http://aws.amazon.com/sdkforandroid
-- artifact: javax.annotation:jsr250-api:+
-  name: JSR-250 Common Annotations for the JavaTM Platform
-  copyrightHolder: Oracle Corp.
-  license: COMMON DEVELOPMENT AND DISTRIBUTION LICENSE (CDDL) Version 1.0
-  licenseUrl: https://glassfish.dev.java.net/public/CDDLv1.0.html
-  url: http://jcp.org/aboutJava/communityprocess/final/jsr250/index.html
-- artifact: com.amazonaws:aws-android-sdk-appsync-runtime:+
-  name: AWS Android SDK - AppSync GraphQL Runtime
-  copyrightHolder: Amazon
-  license: Apache License 2.0
-  licenseUrl: https://www.apache.org/licenses/LICENSE-2.0
-  url: https://github.com/awslabs/aws-mobile-appsync-sdk-android
-- artifact: com.amazonaws:aws-android-sdk-auth-core:+
-  name: AWS SDK for Android - AWS Authentication Core
-  copyrightHolder: Amazon
-  license: Amazon Software License
-  url: http://aws.amazon.com/sdkforandroid
-- artifact: com.amazonaws:aws-android-sdk-appsync-api:+
-  name: AWS SDK for Android GraphQL API
-  copyrightHolder: Amazon
-  license: Apache License 2.0
-  licenseUrl: https://www.apache.org/licenses/LICENSE-2.0
-  url: https://github.com/awslabs/aws-mobile-appsync-sdk-android
 - artifact: com.amazonaws:aws-android-sdk-cognitoidentityprovider-asf:+
   name: AWS SDK for Android - Amazon Cognito Identity Provider ASF
   copyrightHolder: Amazon
@@ -226,17 +187,6 @@
   copyrightHolder: Amazon
   licenseUrl: http://aws.amazon.com/asl/
   url: http://aws.amazon.com/sdkforandroid
-- artifact: com.amazonaws:aws-android-sdk-mobile-client:+
-  name: AWS SDK for Android - AWS Mobile Client
-  copyrightHolder: Amazon
-  license: Amazon Software License
-  url: http://aws.amazon.com/sdkforandroid
-- artifact: com.amazonaws:aws-android-sdk-appsync:+
-  name: AWS Android SDK - AppSync GraphQL
-  copyrightHolder: Amazon
-  license: Apache License 2.0
-  licenseUrl: https://www.apache.org/licenses/LICENSE-2.0
-  url: https://github.com/awslabs/aws-mobile-appsync-sdk-android
 - artifact: com.amazonaws:aws-android-sdk-s3:+
   name: AWS SDK for Android - Amazon S3
   copyrightHolder: Amazon
@@ -641,12 +591,6 @@
   license: The Apache License, Version 2.0
   licenseUrl: https://www.apache.org/licenses/LICENSE-2.0.txt
   url: https://github.com/awslabs/smithy-kotlin
-- artifact: aws.smithy.kotlin:http-client-engine-okhttp-jvm:+
-  name: http-client-engine-okhttp-jvm
-  copyrightHolder: Amazon
-  license: The Apache License, Version 2.0
-  licenseUrl: https://www.apache.org/licenses/LICENSE-2.0.txt
-  url: https://github.com/awslabs/smithy-kotlin
 - artifact: aws.smithy.kotlin:http-client-jvm:+
   name: http-client-jvm
   copyrightHolder: Amazon
@@ -930,3 +874,27 @@
   license: The Apache Software License, Version 2.0
   licenseUrl: https://www.apache.org/licenses/LICENSE-2.0.txt
   url: https://square.github.io/okhttp/
+- artifact: androidx.collection:collection-jvm:+
+  name: collection-jvm
+  copyrightHolder: Google, Inc.
+  license: The Apache Software License, Version 2.0
+  licenseUrl: http://www.apache.org/licenses/LICENSE-2.0.txt
+  url: https://developer.android.com/jetpack/androidx/releases/collection#1.4.2
+- artifact: androidx.core:core-viewtree:+
+  name: core-viewtree
+  copyrightHolder: Google, Inc.
+  license: The Apache Software License, Version 2.0
+  licenseUrl: http://www.apache.org/licenses/LICENSE-2.0.txt
+  url: https://developer.android.com/jetpack/androidx/releases/core#1.0.0
+- artifact: androidx.graphics:graphics-shapes-desktop:+
+  name: graphics-shapes-desktop
+  copyrightHolder: Google, Inc.
+  license: The Apache Software License, Version 2.0
+  licenseUrl: http://www.apache.org/licenses/LICENSE-2.0.txt
+  url: https://developer.android.com/jetpack/androidx/releases/graphics#1.0.1
+- artifact: org.jspecify:jspecify:+
+  name: jspecify
+  copyrightHolder: JSpecify Contributors
+  license: The Apache License, Version 2.0
+  licenseUrl: http://www.apache.org/licenses/LICENSE-2.0.txt
+  url: http://jspecify.org/
