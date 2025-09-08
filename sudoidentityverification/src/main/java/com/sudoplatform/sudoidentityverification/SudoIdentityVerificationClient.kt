@@ -222,7 +222,7 @@ interface SudoIdentityVerificationClient {
 
     /**
      * Retrieves the content for identity data processing consent,
-     *  given the provided preferred content type and locale.
+     *  given the provided preferred content type and language (in RFC 5646 format).
      *
      * @param input [IdentityDataProcessingConsentContentInput] Parameters for content retrieval.
      * @return [IdentityDataProcessingConsentContent] result.

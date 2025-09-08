@@ -16,5 +16,5 @@ data class IdentityDataProcessingConsentStatus(
     val consentWithdrawnAtEpochMs: Double?,
     val content: String?,
     val contentType: String?,
-    val locale: String?,
+    val language: String?,
 )

@@ -13,5 +13,5 @@ package com.sudoplatform.sudoidentityverification.types
 data class IdentityDataProcessingConsentContent(
     val content: String,
     val contentType: String,
-    val locale: String,
+    val language: String,
 )

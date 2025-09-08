@@ -26,6 +26,8 @@
         <cve>CVE-2025-24970</cve>
         <cve>CVE-2025-25193</cve>
         <cve>CVE-2025-55163</cve>
+        <cve>CVE-2025-58056</cve>
+        <cve>CVE-2025-58057</cve>
     </suppress>
     <suppress until="2025-12-30">
         <notes><![CDATA[

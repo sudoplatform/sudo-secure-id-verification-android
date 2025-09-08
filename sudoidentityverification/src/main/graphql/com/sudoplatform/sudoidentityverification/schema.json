@@ -71,7 +71,7 @@
             "deprecationReason": null
           },
           {
-            "name": "locale",
+            "name": "language",
             "description": null,
             "args": [],
             "type": {
@@ -116,7 +116,7 @@
             "deprecationReason": null
           },
           {
-            "name": "preferredLocale",
+            "name": "preferredLanguage",
             "description": null,
             "type": {
               "kind": "NON_NULL",
@@ -176,7 +176,7 @@
             "deprecationReason": null
           },
           {
-            "name": "locale",
+            "name": "language",
             "description": null,
             "type": {
               "kind": "NON_NULL",
@@ -295,7 +295,7 @@
             "deprecationReason": null
           },
           {
-            "name": "locale",
+            "name": "language",
             "description": null,
             "args": [],
             "type": {

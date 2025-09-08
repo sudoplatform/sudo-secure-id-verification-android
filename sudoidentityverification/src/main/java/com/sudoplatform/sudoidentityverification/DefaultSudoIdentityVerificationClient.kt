@@ -83,7 +83,7 @@ class DefaultSudoIdentityVerificationClient(
         private const val ERROR_CONSENT_REQUIRED = "ConsentRequiredError"
     }
 
-    override val version: String = "20.0.0"
+    override val version: String = "21.0.0"
 
     /**
      * GraphQL client used for calling Sudo service API.
@@ -471,7 +471,7 @@ class DefaultSudoIdentityVerificationClient(
                 GraphQLIdentityDataProcessingConsentInput(
                     content = input.content,
                     contentType = input.contentType,
-                    locale = input.locale,
+                    language = input.language,
                 )
             val response =
                 this.graphQLClient.mutate<ProvideIdentityDataProcessingConsentMutation, ProvideIdentityDataProcessingConsentMutation.Data>(
@@ -546,7 +546,7 @@ class DefaultSudoIdentityVerificationClient(
         try {
             val queryInput =
                 GraphQLIdentityDataProcessingConsentContentInput(
-                    preferredLocale = input.preferredLocale,
+                    preferredLanguage = input.preferredLanguage,
                     preferredContentType = input.preferredContentType,
                 )
             val response =
@@ -566,7 +566,7 @@ class DefaultSudoIdentityVerificationClient(
                 return IdentityDataProcessingConsentContent(
                     content = it.content,
                     contentType = it.contentType,
-                    locale = it.locale,
+                    language = it.language,
                 )
             }
             throw SudoIdentityVerificationException.FailedException("Query succeeded but output was null.")
@@ -607,7 +607,7 @@ class DefaultSudoIdentityVerificationClient(
                     consentWithdrawnAtEpochMs = it.consentWithdrawnAtEpochMs,
                     content = it.content,
                     contentType = it.contentType,
-                    locale = it.locale,
+                    language = it.language,
                 )
             }
             throw SudoIdentityVerificationException.FailedException("Query succeeded but output was null.")

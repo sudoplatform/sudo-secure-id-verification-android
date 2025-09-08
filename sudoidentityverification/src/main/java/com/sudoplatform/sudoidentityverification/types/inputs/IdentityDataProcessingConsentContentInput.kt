@@ -11,5 +11,5 @@ package com.sudoplatform.sudoidentityverification.types.inputs
  */
 data class IdentityDataProcessingConsentContentInput(
     val preferredContentType: String,
-    val preferredLocale: String,
+    val preferredLanguage: String,
 )

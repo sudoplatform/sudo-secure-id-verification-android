@@ -49,28 +49,28 @@ type IdentityDocumentCaptureInitiationResponse {
 
 input IdentityDataProcessingConsentContentInput {
   preferredContentType: String!
-  preferredLocale: String!
+  preferredLanguage: String!
 }
 
 type IdentityDataProcessingConsentContent {
   content: String!
   contentType: String!
-  locale: String!
+  language: String!
 }
 
-type IdentityDataProcessingConsentStatus  {
+type IdentityDataProcessingConsentStatus {
   consented: Boolean!
   consentedAtEpochMs: Float
   consentWithdrawnAtEpochMs: Float
   content: String
   contentType: String
-  locale: String
+  language: String
 }
 
 input IdentityDataProcessingConsentInput {
   content: String!
   contentType: String!
-  locale: String!
+  language: String!
 }
 
 type IdentityDataProcessingConsentResponse {
