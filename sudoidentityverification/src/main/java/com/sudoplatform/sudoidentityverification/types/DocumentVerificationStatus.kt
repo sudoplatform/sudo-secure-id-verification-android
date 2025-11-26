@@ -14,6 +14,11 @@ enum class DocumentVerificationStatus(
 ) {
     NOT_REQUIRED("notRequired"),
     NOT_ATTEMPTED("notAttempted"),
+    CAPTURE_INITIATED("captureInitiated"),
+    CAPTURE_LINK_OPENED("captureLinkOpened"),
+    CAPTURE_RETRY_LIMIT_EXCEEDED("captureRetryLimitExceeded"),
+    CAPTURE_LINK_TIMEOUT("captureLinkTimeout"),
+    CAPTURE_LINK_EXPIRED("captureLinkExpired"),
     PENDING("pending"),
     DOCUMENT_UNREADABLE("documentUnreadable"),
     FAILED("failed"),
