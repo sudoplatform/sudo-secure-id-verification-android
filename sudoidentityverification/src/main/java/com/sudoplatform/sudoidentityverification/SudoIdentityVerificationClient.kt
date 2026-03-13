@@ -17,6 +17,7 @@ import com.sudoplatform.sudoidentityverification.types.inputs.IdentityDataProces
 import com.sudoplatform.sudoidentityverification.types.inputs.VerifyIdentityDocumentInput
 import com.sudoplatform.sudoidentityverification.types.inputs.VerifyIdentityInput
 import com.sudoplatform.sudologging.Logger
+import com.sudoplatform.sudouser.SudoPlatformSignInCallback
 import com.sudoplatform.sudouser.SudoUserClient
 import com.sudoplatform.sudouser.amplify.GraphQLClient
 
@@ -86,6 +87,21 @@ interface SudoIdentityVerificationClient {
      * and allow us to retry.  The value of `version` doesn't need to be kept up-to-date with the version of the code.
      */
     val version: String
+
+    /**
+     * Sets an optional callback to be invoked when operations are attempted while not signed in.
+     * When set, all operations (except subscriptions and initialization) will check sign-in status
+     * and invoke this callback if the user is not signed in.
+     * Setting the callback to null disables automatic sign-in checking, restoring the default
+     * behavior where operations proceed without sign-in checks.
+     * If the callback throws an exception, that exception is propagated
+     * to the caller and the original operation is not executed.
+     *
+     * @param callback An optional [SudoPlatformSignInCallback] to handle sign-in. Pass null to disable
+     *                 automatic sign-in checking. The callback may throw exceptions which
+     *                 will be propagated to the caller.
+     */
+    fun setSignInCallback(callback: SudoPlatformSignInCallback?)
 
     /**
      * Retrieves the list of supported countries for identity verification.

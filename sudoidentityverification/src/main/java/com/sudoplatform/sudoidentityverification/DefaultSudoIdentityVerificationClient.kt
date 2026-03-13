@@ -32,10 +32,15 @@ import com.sudoplatform.sudoidentityverification.types.inputs.IdentityDataProces
 import com.sudoplatform.sudoidentityverification.types.inputs.VerifyIdentityDocumentInput
 import com.sudoplatform.sudoidentityverification.types.inputs.VerifyIdentityInput
 import com.sudoplatform.sudologging.Logger
+import com.sudoplatform.sudouser.SignInGuard
+import com.sudoplatform.sudouser.SudoPlatformSignInCallback
 import com.sudoplatform.sudouser.SudoUserClient
 import com.sudoplatform.sudouser.amplify.GraphQLClient
 import com.sudoplatform.sudouser.exceptions.GRAPHQL_ERROR_TYPE
 import com.sudoplatform.sudouser.exceptions.HTTP_STATUS_CODE_KEY
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import java.net.HttpURLConnection
 import java.util.concurrent.CancellationException
 import com.sudoplatform.sudoidentityverification.graphql.type.IdentityDataProcessingConsentContentInput as GraphQLIdentityDataProcessingConsentContentInput
@@ -51,12 +56,14 @@ import com.sudoplatform.sudoidentityverification.graphql.type.VerifyIdentityInpu
  *  cryptographic operations.
  * @property logger [Logger] Logger used for logging messages.
  * @property graphQLClient [GraphQLClient] Optional GraphQL client to use. Mainly used for unit testing.
+ * @property signInGuard [SignInGuard] Optional SignInGuard to use. Mainly used for unit testing.
  */
 class DefaultSudoIdentityVerificationClient(
     private val context: Context,
     private val sudoUserClient: SudoUserClient,
     private val logger: Logger = DefaultLogger.instance,
     graphQLClient: GraphQLClient? = null,
+    signInGuard: SignInGuard? = null,
 ) : SudoIdentityVerificationClient {
     companion object {
         private const val KNOWLEDGE_OF_PII = "KNOWLEDGE_OF_PII"
@@ -83,6 +90,16 @@ class DefaultSudoIdentityVerificationClient(
         private const val ERROR_CONSENT_REQUIRED = "ConsentRequiredError"
     }
 
+    /**
+     * Mutex for thread-safe access to the sign-in callback.
+     */
+    private val callbackMutex = Mutex()
+
+    /**
+     * Threadsafe container for optional callback to be invoked when operations are attempted while not signed in.
+     */
+    private var signInGuard = signInGuard ?: SignInGuard(sudoUserClient)
+
     override val version: String = "21.0.0"
 
     /**
@@ -97,12 +114,39 @@ class DefaultSudoIdentityVerificationClient(
         )
     }
 
-    override suspend fun listSupportedCountries(): List<String> {
-        this.logger.info("Retrieving the list of supported countries for identity verification.")
+    override fun setSignInCallback(callback: SudoPlatformSignInCallback?) {
+        runBlocking {
+            callbackMutex.withLock {
+                signInGuard.setCallback(callback)
+            }
+        }
+    }
+
+    /**
+     * Checks if the user is signed in and invokes the callback if needed.
+     * Only performs the check if a callback is configured.
+     *
+     * This method implements the automatic sign-in checking mechanism:
+     * If no callback is set, checks if user is signed in and throws NotSignedInException if not
+     * If callback is set, checks if user is signed in using sudoUserClient.getSubject()
+     * If user is not signed in, invokes the callback
+     * Any exceptions from the callback are propagated to the caller
+     *
+     * @throws SudoIdentityVerificationException.NotSignedInException if user is not signed in
+     * @throws Exception Any exception thrown by the sign-in callback is propagated; if we are
+     * still not signed in after the callback returns, a NotSignedInException is thrown.
+     */
+    private suspend fun ensureSignedIn() {
+        signInGuard.ensureSignedIn()
 
         if (!this.sudoUserClient.isSignedIn()) {
             throw SudoIdentityVerificationException.NotSignedInException()
         }
+    }
+
+    override suspend fun listSupportedCountries(): List<String> {
+        this.logger.info("Retrieving the list of supported countries for identity verification.")
+        ensureSignedIn()
 
         try {
             val response =
@@ -131,10 +175,7 @@ class DefaultSudoIdentityVerificationClient(
 
     override suspend fun isFaceImageRequiredWithDocumentVerification(): Boolean {
         this.logger.info("Retrieving the flag indicating if face images need to be provided with ID document verification.")
-
-        if (!this.sudoUserClient.isSignedIn()) {
-            throw SudoIdentityVerificationException.NotSignedInException()
-        }
+        ensureSignedIn()
 
         try {
             val response =
@@ -163,10 +204,7 @@ class DefaultSudoIdentityVerificationClient(
 
     override suspend fun isFaceImageRequiredWithDocumentCapture(): Boolean {
         this.logger.info("Retrieving the flag indicating if face images need to be provided with ID document capture.")
-
-        if (!this.sudoUserClient.isSignedIn()) {
-            throw SudoIdentityVerificationException.NotSignedInException()
-        }
+        ensureSignedIn()
 
         try {
             val response =
@@ -195,10 +233,7 @@ class DefaultSudoIdentityVerificationClient(
 
     override suspend fun isDocumentCaptureInitiationEnabled(): Boolean {
         this.logger.info("Retrieves the flag for whether document capture can be initiated using initiateIdentityDocumentCapture()")
-
-        if (!this.sudoUserClient.isSignedIn()) {
-            throw SudoIdentityVerificationException.NotSignedInException()
-        }
+        ensureSignedIn()
 
         try {
             val response =
@@ -227,10 +262,7 @@ class DefaultSudoIdentityVerificationClient(
 
     override suspend fun isConsentRequiredForVerification(): Boolean {
         this.logger.info("Retrieves the flag for whether consent is required for verification.")
-
-        if (!this.sudoUserClient.isSignedIn()) {
-            throw SudoIdentityVerificationException.NotSignedInException()
-        }
+        ensureSignedIn()
 
         try {
             val response =
@@ -259,10 +291,7 @@ class DefaultSudoIdentityVerificationClient(
 
     override suspend fun checkIdentityVerification(): VerifiedIdentity {
         this.logger.info("Checking the identity verification status.")
-
-        if (!this.sudoUserClient.isSignedIn()) {
-            throw SudoIdentityVerificationException.NotSignedInException()
-        }
+        ensureSignedIn()
 
         try {
             val response =
@@ -293,10 +322,7 @@ class DefaultSudoIdentityVerificationClient(
 
     override suspend fun verifyIdentity(input: VerifyIdentityInput): VerifiedIdentity {
         this.logger.info("Verifying an identity.")
-
-        if (!this.sudoUserClient.isSignedIn()) {
-            throw SudoIdentityVerificationException.NotSignedInException()
-        }
+        ensureSignedIn()
 
         try {
             val mutationInput =
@@ -340,10 +366,7 @@ class DefaultSudoIdentityVerificationClient(
 
     override suspend fun verifyIdentityDocument(input: VerifyIdentityDocumentInput): VerifiedIdentity {
         this.logger.info("Verifying identity document.")
-
-        if (!this.sudoUserClient.isSignedIn()) {
-            throw SudoIdentityVerificationException.NotSignedInException()
-        }
+        ensureSignedIn()
 
         try {
             val mutationInput =
@@ -384,10 +407,7 @@ class DefaultSudoIdentityVerificationClient(
 
     override suspend fun captureAndVerifyIdentityDocument(input: VerifyIdentityDocumentInput): VerifiedIdentity {
         this.logger.info("Capturing and verifying identity document.")
-
-        if (!this.sudoUserClient.isSignedIn()) {
-            throw SudoIdentityVerificationException.NotSignedInException()
-        }
+        ensureSignedIn()
 
         try {
             val mutationInput =
@@ -427,10 +447,7 @@ class DefaultSudoIdentityVerificationClient(
 
     override suspend fun initiateIdentityDocumentCapture(): IdentityDocumentCaptureInitiationInfo {
         this.logger.info("Attempts to initiate ID document capture using underlying provider's web based method.")
-
-        if (!this.sudoUserClient.isSignedIn()) {
-            throw SudoIdentityVerificationException.NotSignedInException()
-        }
+        ensureSignedIn()
 
         try {
             val response =
@@ -461,10 +478,7 @@ class DefaultSudoIdentityVerificationClient(
 
     override suspend fun provideIdentityDataProcessingConsent(input: IdentityDataProcessingConsentInput): Boolean {
         this.logger.info("Providing identity data processing consent.")
-
-        if (!this.sudoUserClient.isSignedIn()) {
-            throw SudoIdentityVerificationException.NotSignedInException()
-        }
+        ensureSignedIn()
 
         try {
             val mutationInput =
@@ -501,10 +515,7 @@ class DefaultSudoIdentityVerificationClient(
 
     override suspend fun withdrawIdentityDataProcessingConsent(): Boolean {
         this.logger.info("Withdrawing identity data processing consent.")
-
-        if (!this.sudoUserClient.isSignedIn()) {
-            throw SudoIdentityVerificationException.NotSignedInException()
-        }
+        ensureSignedIn()
 
         try {
             val response =
@@ -538,10 +549,7 @@ class DefaultSudoIdentityVerificationClient(
         input: IdentityDataProcessingConsentContentInput,
     ): IdentityDataProcessingConsentContent {
         this.logger.info("Retrieving identity data processing consent content.")
-
-        if (!this.sudoUserClient.isSignedIn()) {
-            throw SudoIdentityVerificationException.NotSignedInException()
-        }
+        ensureSignedIn()
 
         try {
             val queryInput =
@@ -583,10 +591,7 @@ class DefaultSudoIdentityVerificationClient(
 
     override suspend fun getIdentityDataProcessingConsentStatus(): IdentityDataProcessingConsentStatus {
         logger.info("Retrieving identity data processing consent status.")
-
-        if (!this.sudoUserClient.isSignedIn()) {
-            throw SudoIdentityVerificationException.NotSignedInException()
-        }
+        ensureSignedIn()
 
         try {
             val response =
