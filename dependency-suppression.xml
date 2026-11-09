@@ -1,106 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <suppressions xmlns="https://jeremylong.github.io/DependencyCheck/dependency-suppression.1.3.xsd">
-    <suppress until="2026-06-30">
-        <notes><![CDATA[
-        file name: launcher-0.0.9-alpha02.jar (shaded: com.google.code.gson:gson:2.8.9)
-        ]]></notes>
-        <packageUrl regex="true">^pkg:maven/com\.google\.code\.gson/gson@.*$</packageUrl>
-        <cve>CVE-2025-53864</cve>
-    </suppress>
-    <suppress until="2026-06-30">
-        <notes><![CDATA[
-    file name: core-0.0.9-alpha02.jar (shaded: io.netty:netty-codec-http2:4.1.72.Final)
-    ]]></notes>
-        <packageUrl regex="true">^pkg:maven/io\.netty/netty.*@.*$</packageUrl>
-        <cve>CVE-2023-44487</cve>
-        <cve>CVE-2023-34462</cve>
-        <cve>CVE-2024-29025</cve>
-        <cve>CVE-2024-47535</cve>
-        <cve>CVE-2025-24970</cve>
-        <cve>CVE-2025-25193</cve>
-        <cve>CVE-2025-55163</cve>
-        <cve>CVE-2025-58056</cve>
-        <cve>CVE-2025-58057</cve>
-        <cve>CVE-2025-67735</cve>
-    </suppress>
-    <suppress until="2026-06-30">
-        <notes><![CDATA[
-   file name: analysis-kotlin-descriptors-1.9.20.jar (shaded: org.apache.commons:commons-compress:1.21)
-   ]]></notes>
-        <packageUrl regex="true">^pkg:maven/org\.apache\.commons/commons\-compress@.*$</packageUrl>
-        <cve>CVE-2024-25710</cve>
-        <cve>CVE-2024-26308</cve>
-    </suppress>
-    <suppress until="2026-06-30">
-        <notes><![CDATA[
-       file name: jackson-core-2.12.7.jar
-       ]]></notes>
-        <packageUrl regex="true">^pkg:maven/com\.fasterxml\.jackson\.core/jackson\-core@.*$</packageUrl>
-        <cve>CVE-2025-49128</cve>
-        <cve>CVE-2025-52999</cve>
-    </suppress>
-    <suppress until="2026-06-30">
-        <notes><![CDATA[
-        CVE-2024-7246 - Vulnerability in gRPC and protobuf components
-        ]]></notes>
-        <packageUrl regex="true">^pkg:maven/io\.grpc/.*$</packageUrl>
-        <cve>CVE-2024-7246</cve>
-        <cve>CVE-2023-44487</cve>
-    </suppress>
-    <suppress until="2026-06-30">
-        <notes><![CDATA[
-   file name: jackson-databind-2.12.7.1.jar
-   ]]></notes>
-        <packageUrl regex="true">^pkg:maven/com\.fasterxml\.jackson\.core/jackson\-databind@.*$</packageUrl>
-        <cve>CVE-2023-35116</cve>
-    </suppress>
-    <suppress until="2026-06-30">
-        <notes><![CDATA[
-       file name: woodstox-core-6.2.4.jar
-       ]]></notes>
-        <packageUrl regex="true">^pkg:maven/com\.fasterxml\.woodstox/woodstox\-core@.*$</packageUrl>
-        <cve>CVE-2022-40152</cve>
-    </suppress>
-    <suppress until="2026-06-30">
+    <suppress until="2026-12-30">
         <notes><![CDATA[
        file name: junit-4.12.jar
        ]]></notes>
         <packageUrl regex="true">^pkg:maven/junit/junit@.*$</packageUrl>
         <cve>CVE-2020-15250</cve>
     </suppress>
-    <suppress until="2026-06-30">
-        <notes><![CDATA[
-       file name: kotlin-analysis-intellij-1.8.10.jar (shaded: com.google.protobuf:protobuf-java:2.6.1)
-       ]]></notes>
-        <packageUrl regex="true">^pkg:maven/com\.google\.protobuf/protobuf\-.*@.*$</packageUrl>
-        <cve>CVE-2024-7254</cve>
-    </suppress>
-    <suppress until="2026-06-30">
-        <notes><![CDATA[
-   file name: kotlin-parcelize-runtime-2.2.0.jar
-   ]]></notes>
-        <packageUrl regex="true">^pkg:maven/org\.jetbrains\.kotlin/kotlin-.*-runtime@.*$</packageUrl>
-        <cve>CVE-2025-29903</cve>
-    </suppress>
-    <suppress until="2026-06-30">
-        <notes><![CDATA[
-   file name: analysis-kotlin-descriptors-2.0.0.jar
-   ]]></notes>
-        <packageUrl regex="true">^pkg:maven/org\.jetbrains\.dokka/.*$</packageUrl>
-        <cve>CVE-2020-29582</cve>
-    </suppress>
-    <suppress until="2026-06-30">
+    <suppress until="2026-12-30">
         <notes><![CDATA[
    file name: kotlin-stdlib*.jar
    ]]></notes>
         <packageUrl regex="true">^pkg:maven/org\.jetbrains\.kotlin/kotlin-stdlib.*@.*$</packageUrl>
         <cve>CVE-2020-29582</cve>
     </suppress>
-    <suppress until="2026-06-30">
+    <suppress until="2026-12-30">
         <notes><![CDATA[
-   file name: kotlin-reflect-*.jar
-   ]]></notes>
-        <packageUrl regex="true">^pkg:maven/org\.jetbrains\.kotlin/kotlin-reflect@.*$</packageUrl>
-        <cve>CVE-2020-29582</cve>
+        Dependency of AWS Amplify, likely for SSO Auth flows unused in this SDK.
+        file name: browser-1.4.0.aar
+        ]]></notes>
+        <packageUrl regex="true">^pkg:maven/androidx\.browser/browser@.*$</packageUrl>
+        <cve>CVE-2008-7298</cve>
+    </suppress>
+    <suppress until="2026-12-30">
+        <notes>
+            This CVE relates to Kotlin before 2.4.20 not checking data when it is deserialized
+            from the build cache. We can't update to 2.4.20 yet because none of the matching
+            plugins are available. Suppress this CVE temporarily. This is safe to do beecause
+            we have strong control over who has access to our build cache.
+        </notes>
+        <cve>CVE-2026-53914</cve>
     </suppress>
 </suppressions>

@@ -6,14 +6,19 @@
 
 package com.sudoplatform.sudoidentityverification
 
+import android.app.Activity
 import android.content.Context
+import android.os.Build
+import androidx.annotation.RequiresApi
 import com.sudoplatform.sudoapiclient.ApiClientManager
+import com.sudoplatform.sudoidentityverification.types.DigitalCredentialVerificationOutcome
 import com.sudoplatform.sudoidentityverification.types.IdentityDataProcessingConsentContent
 import com.sudoplatform.sudoidentityverification.types.IdentityDataProcessingConsentStatus
 import com.sudoplatform.sudoidentityverification.types.IdentityDocumentCaptureInitiationInfo
 import com.sudoplatform.sudoidentityverification.types.VerifiedIdentity
 import com.sudoplatform.sudoidentityverification.types.inputs.IdentityDataProcessingConsentContentInput
 import com.sudoplatform.sudoidentityverification.types.inputs.IdentityDataProcessingConsentInput
+import com.sudoplatform.sudoidentityverification.types.inputs.ResidentialAddressInput
 import com.sudoplatform.sudoidentityverification.types.inputs.VerifyIdentityDocumentInput
 import com.sudoplatform.sudoidentityverification.types.inputs.VerifyIdentityInput
 import com.sudoplatform.sudologging.Logger
@@ -157,6 +162,18 @@ interface SudoIdentityVerificationClient {
     suspend fun isConsentRequiredForVerification(): Boolean
 
     /**
+     * Flag indicating if the service accepts identity verification with a digital credential
+     * using [verifyIdentityWithDigitalCredential]. This reflects the service configuration only;
+     * it does not indicate whether the device or any wallet on it can present a credential.
+     *
+     * @return boolean flag.
+     *
+     * @throws [SudoIdentityVerificationException].
+     */
+    @Throws(SudoIdentityVerificationException::class)
+    suspend fun isDigitalCredentialVerificationEnabled(): Boolean
+
+    /**
      * Checks the identity verification status of the currently signed in user.
      *
      * @returns A [VerifiedIdentity] verification result.
@@ -204,6 +221,77 @@ interface SudoIdentityVerificationClient {
      */
     @Throws(SudoIdentityVerificationException::class)
     suspend fun captureAndVerifyIdentityDocument(input: VerifyIdentityDocumentInput): VerifiedIdentity
+
+    /**
+     * Verifies identity using a digital credential, such as a mobile driver's licence, held in a
+     * wallet on the device. Requests a presentation from the service, shows the Credential Manager
+     * credential selector so the user can choose a credential, then submits the presentation to
+     * the service for verification.
+     *
+     * A successful verification completes identity verification on its own; the knowledge of PII
+     * step performed by [verifyIdentity] is not required.
+     *
+     * Where the service requires a residential address and the presented credential carries
+     * none, such as a Google ID pass, the result is
+     * [DigitalCredentialVerificationOutcome.ResidentialAddressRequired]. Collect the user's
+     * address and pass the result to [completeDigitalCredentialVerification].
+     *
+     * The service only accepts presentations from apps whose signing certificate is in its list
+     * of permitted origins.
+     *
+     * @param activity [Activity] The activity the credential selector is shown over.
+     * @return A [DigitalCredentialVerificationOutcome] verification outcome.
+     *
+     * @throws [SudoIdentityVerificationException.DigitalCredentialCancelledException] if the user
+     *  dismissed the credential selector.
+     * @throws [SudoIdentityVerificationException.NoDigitalCredentialException] if no credential
+     *  on the device satisfies the request.
+     * @throws [SudoIdentityVerificationException.DigitalCredentialUnsupportedException] if the
+     *  device cannot request digital credentials.
+     * @throws [SudoIdentityVerificationException.DigitalCredentialRequestExpiredException] if the
+     *  request expired before a credential was presented.
+     * @throws [SudoIdentityVerificationException.DigitalCredentialVerificationFailedException] if
+     *  the presented credential was rejected as malformed or not authentic.
+     * @throws [SudoIdentityVerificationException.DigitalCredentialIssuerNotTrustedException] if
+     *  the presented credential's issuer is not trusted.
+     * @throws [SudoIdentityVerificationException.DigitalCredentialNotAcceptedException] if the
+     *  presented credential is not of an accepted type.
+     * @throws [SudoIdentityVerificationException.DigitalCredentialNoLongerValidException] if the
+     *  presented credential, or the certificate that signed it, has expired or been revoked.
+     * @throws [SudoIdentityVerificationException].
+     */
+    @RequiresApi(Build.VERSION_CODES.P)
+    @Throws(SudoIdentityVerificationException::class)
+    suspend fun verifyIdentityWithDigitalCredential(activity: Activity): DigitalCredentialVerificationOutcome
+
+    /**
+     * Completes a digital credential verification that requires the user's residential address,
+     * by submitting the presentation again with the address. The user does not present a
+     * credential again.
+     *
+     * The service verifies the address against the identity verification provider's records,
+     * using the name and date of birth from the credential.
+     *
+     * @param pending [DigitalCredentialVerificationOutcome.ResidentialAddressRequired] The
+     *  outcome of [verifyIdentityWithDigitalCredential] to complete.
+     * @param address [ResidentialAddressInput] The user's residential address.
+     * @return A [VerifiedIdentity] verification result, which is unverified if the address was
+     *  not verified.
+     *
+     * @throws [SudoIdentityVerificationException.DigitalCredentialRequestExpiredException] if the
+     *  presentation can no longer be completed; start a new verification.
+     * @throws [SudoIdentityVerificationException.UnsupportedCountryException] if the address is
+     *  not in a supported country; it may be corrected and submitted again.
+     * @throws [SudoIdentityVerificationException.RequiredIdentityInformationNotProvidedException]
+     *  if the presentation was submitted without an address too many times; start a new
+     *  verification.
+     * @throws [SudoIdentityVerificationException].
+     */
+    @Throws(SudoIdentityVerificationException::class)
+    suspend fun completeDigitalCredentialVerification(
+        pending: DigitalCredentialVerificationOutcome.ResidentialAddressRequired,
+        address: ResidentialAddressInput,
+    ): VerifiedIdentity
 
     /**
      * Attempts to initiate ID document capture using underlying provider's web based method.

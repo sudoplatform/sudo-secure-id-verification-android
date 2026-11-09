@@ -82,12 +82,6 @@
   license: The Apache Software License, Version 2.0
   licenseUrl: http://www.apache.org/licenses/LICENSE-2.0.txt
   url: https://developer.android.com/jetpack/androidx
-- artifact: androidx.collection:collection:+
-  name: Android Support Library collections
-  copyrightHolder: Google, Inc.
-  license: The Apache Software License, Version 2.0
-  licenseUrl: http://www.apache.org/licenses/LICENSE-2.0.txt
-  url: https://developer.android.com/jetpack/androidx
 - artifact: androidx.loader:loader:+
   name: Android Suppot Library loader
   copyrightHolder: Google, Inc.
@@ -898,3 +892,21 @@
   license: The Apache License, Version 2.0
   licenseUrl: http://www.apache.org/licenses/LICENSE-2.0.txt
   url: http://jspecify.org/
+- artifact: androidx.biometric:biometric:+
+  name: biometric
+  copyrightHolder: Google, Inc.
+  license: The Apache Software License, Version 2.0
+  licenseUrl: http://www.apache.org/licenses/LICENSE-2.0.txt
+  url: https://developer.android.com/jetpack/androidx/releases/biometric
+- artifact: com.google.android.gms:play-services-auth-blockstore:+
+  name: play-services-auth-blockstore
+  copyrightHolder: Google, Inc.
+  license: Android Software Development Kit License
+  licenseUrl: https://developer.android.com/studio/terms.html
+  url: https://developers.google.com/android/guides/releases
+- artifact: com.google.android.gms:play-services-identity-credentials:+
+  name: play-services-identity-credentials
+  copyrightHolder: Google, Inc.
+  license: Android Software Development Kit License
+  licenseUrl: https://developer.android.com/studio/terms.html
+  url: https://developers.google.com/android/guides/releases

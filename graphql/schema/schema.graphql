@@ -34,12 +34,18 @@ input VerifyIdentityDocumentInput {
   documentType: String!
 }
 
+type SupportedCountries {
+  countryList: [String!]!
+}
+
 type IdentityVerificationCapabilities {
   supportedCountries: [String!]!
+  faceImageRequiredWithDocument: Boolean!
   faceImageRequiredWithDocumentCapture: Boolean!
   faceImageRequiredWithDocumentVerification: Boolean!
   canInitiateDocumentCapture: Boolean!
   consentRequired: Boolean!
+  canVerifyWithDigitalCredential: Boolean!
 }
 
 type IdentityDocumentCaptureInitiationResponse {
@@ -77,6 +83,80 @@ type IdentityDataProcessingConsentResponse {
   processed: Boolean!
 }
 
+enum DigitalCredentialFlow {
+  DC_API
+  APPLE_VERIFY_WITH_WALLET
+}
+
+union DigitalCredentialFlowRequest = DcApiFlowRequest | AppleVerifyWithWalletFlowRequest
+
+type DcApiFlowRequest {
+  requestJson: String!
+}
+
+"Document type to request from the wallet, mapping to a PKIdentityDocumentDescriptor."
+enum AppleVerifyWithWalletDocumentType {
+  DRIVERS_LICENSE
+}
+
+"Attribute to request from the wallet, mapping to a PKIdentityElement. One element may yield several ISO 18013-5 claims."
+enum AppleVerifyWithWalletElement {
+  GIVEN_NAME
+  FAMILY_NAME
+  DATE_OF_BIRTH
+  ADDRESS
+  ISSUING_AUTHORITY
+}
+
+"How long the verifier may retain the disclosed data, mapping to PKIdentityIntentToStore. Shown to the holder before they consent."
+enum AppleVerifyWithWalletIntentToStore {
+  WILL_NOT_STORE
+  MAY_STORE
+}
+
+"What the client should ask the wallet for, for one document type."
+type AppleVerifyWithWalletDocumentRequest {
+  documentType: AppleVerifyWithWalletDocumentType!
+  elements: [AppleVerifyWithWalletElement!]!
+  intentToStore: AppleVerifyWithWalletIntentToStore!
+}
+
+type AppleVerifyWithWalletFlowRequest {
+  nonce: String!
+  "The document types and attributes to build the PKIdentityRequest from. Unlike DC_API, whose DCQL query the wallet reads directly, an Apple request is assembled by the client, so the service states here what to assemble. More than one entry means any of them is acceptable."
+  documentRequests: [AppleVerifyWithWalletDocumentRequest!]!
+}
+
+type DigitalCredentialRequest {
+  flow: DigitalCredentialFlowRequest!
+  expiryAtEpochSeconds: Float!
+}
+
+input InitiateDigitalCredentialVerificationInput {
+  flow: DigitalCredentialFlow!
+  "Required for the DC_API flow: the origin the credential will be presented to."
+  origin: String
+  "Required for the APPLE_VERIFY_WITH_WALLET flow: the Apple Developer team identifier of the requesting app."
+  teamId: String
+}
+
+"A residential address supplied by the holder, for a presented credential that does not carry one."
+input DigitalCredentialResidentialAddressInput {
+  "Required, and must not be blank."
+  address: String!
+  city: String
+  state: String
+  "Required, and must not be blank."
+  postalCode: String!
+  "ISO 3166-1 alpha-2 or alpha-3 country code, of a supported country."
+  country: String!
+}
+
+input FinalizeDigitalCredentialVerificationInput {
+  response: String!
+  residentialAddress: DigitalCredentialResidentialAddressInput
+}
+
 type Mutation {
   verifyIdentity(input: VerifyIdentityInput): VerifiedIdentity
   verifyIdentityDocument(input: VerifyIdentityDocumentInput): VerifiedIdentity
@@ -88,10 +168,18 @@ type Mutation {
     input: IdentityDataProcessingConsentInput
   ): IdentityDataProcessingConsentResponse
   withdrawIdentityDataProcessingConsent: IdentityDataProcessingConsentResponse
+  initiateDigitalCredentialVerification(
+    input: InitiateDigitalCredentialVerificationInput
+  ): DigitalCredentialRequest
+  finalizeDigitalCredentialVerification(
+    input: FinalizeDigitalCredentialVerificationInput
+  ): VerifiedIdentity
 }
 
 type Query {
   checkIdentityVerification: VerifiedIdentity
+  getSupportedCountries: SupportedCountries
+  getSupportedCountriesForIdentityVerification: SupportedCountries
   getIdentityVerificationCapabilities: IdentityVerificationCapabilities
   getIdentityDataProcessingConsentContent(
     input: IdentityDataProcessingConsentContentInput

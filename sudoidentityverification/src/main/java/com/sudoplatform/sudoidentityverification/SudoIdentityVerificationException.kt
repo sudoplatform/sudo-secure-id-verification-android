@@ -133,6 +133,79 @@ sealed class SudoIdentityVerificationException(
     ) : SudoIdentityVerificationException(message = message, cause = cause)
 
     /**
+     * The user dismissed the digital credential selection without presenting a credential.
+     */
+    class DigitalCredentialCancelledException(
+        message: String? = null,
+        cause: Throwable? = null,
+    ) : SudoIdentityVerificationException(message = message, cause = cause)
+
+    /**
+     * No wallet on the device holds a digital credential that satisfies the request.
+     */
+    class NoDigitalCredentialException(
+        message: String? = null,
+        cause: Throwable? = null,
+    ) : SudoIdentityVerificationException(message = message, cause = cause)
+
+    /**
+     * Credential Manager on this device cannot request digital credentials, for example because
+     * the device does not support it or Google Play services is unavailable or out of date.
+     */
+    class DigitalCredentialUnsupportedException(
+        message: String? = null,
+        cause: Throwable? = null,
+    ) : SudoIdentityVerificationException(message = message, cause = cause)
+
+    /**
+     * The digital credential request issued by the service expired before a credential was
+     * presented. A new verification attempt can be started.
+     */
+    class DigitalCredentialRequestExpiredException(
+        message: String? = null,
+        cause: Throwable? = null,
+    ) : SudoIdentityVerificationException(message = message, cause = cause)
+
+    /**
+     * The presented digital credential was rejected because the wallet response is malformed,
+     * not bound to the request it was presented for, or not authentic. A new verification
+     * attempt can be started.
+     */
+    class DigitalCredentialVerificationFailedException(
+        message: String? = null,
+        cause: Throwable? = null,
+    ) : SudoIdentityVerificationException(message = message, cause = cause)
+
+    /**
+     * The presented digital credential was issued by an authority the service does not trust.
+     * The credential may be genuine; a credential from a different issuer or wallet may be
+     * accepted.
+     */
+    class DigitalCredentialIssuerNotTrustedException(
+        message: String? = null,
+        cause: Throwable? = null,
+    ) : SudoIdentityVerificationException(message = message, cause = cause)
+
+    /**
+     * The presented digital credential is not of a type the service accepts, such as an identity
+     * pass where only a driving licence is accepted.
+     */
+    class DigitalCredentialNotAcceptedException(
+        message: String? = null,
+        cause: Throwable? = null,
+    ) : SudoIdentityVerificationException(message = message, cause = cause)
+
+    /**
+     * The presented digital credential is no longer valid: it has expired, or the certificate
+     * its issuer signed it with has expired or been revoked. The user may be able to refresh
+     * the credential in their wallet.
+     */
+    class DigitalCredentialNoLongerValidException(
+        message: String? = null,
+        cause: Throwable? = null,
+    ) : SudoIdentityVerificationException(message = message, cause = cause)
+
+    /**
      * Internal server error occurred in Identity Verification service.
      */
     class InternalServerException(

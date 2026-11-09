@@ -5,5 +5,6 @@ query GetIdentityVerificationCapabilities {
     faceImageRequiredWithDocumentVerification
     canInitiateDocumentCapture
     consentRequired
+    canVerifyWithDigitalCredential
   }
 }

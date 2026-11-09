@@ -19,7 +19,7 @@ android {
         minSdkVersion 26
         targetSdkVersion 35
         versionCode 1
-        versionName "21.0.0"
+        versionName "22.0.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         testApplicationId = "com.sudoplatform.sudoidentityverification.test"
     }
@@ -110,6 +110,10 @@ dependencies {
     implementation "com.sudoplatform:sudouser:21.1.0"
     implementation 'com.sudoplatform:sudoapiclient:12.0.0'
 
+    // Digital credentials.
+    implementation "androidx.credentials:credentials:1.6.0"
+    implementation "androidx.credentials:credentials-play-services-auth:1.6.0"
+
     // Testing
     testImplementation 'junit:junit:4.13.2'
     testImplementation "io.kotlintest:kotlintest-assertions:3.4.2"
@@ -162,32 +166,12 @@ dokkaHtml {
     }
 }
 
-// Returns a list of `configurations` which should not be scanned for vulnerabilities
-def getConfigurationsToSkip = { configs ->
-    configs.findAll {
-        it.name.startsWithAny("androidTest", "test", "lint") ||
-                it.name.contains("AndroidTest") ||
-                it.name.contains("UnitTest")
-    }.collect {
-        it.name
-    }
-}
-
-tasks.register("printConfigurationsToSkip") {
-    group = "OWASP dependency-check"
-    description = "Print the configurations which are skipped when scanning for vulnerable dependencies"
-    doLast {
-        println "Configurations to skip when scanning for vulnerable dependencies:"
-        println getConfigurationsToSkip(configurations).join("\n")
-    }
-}
-
 afterEvaluate {
     // NOTE: this must be within `afterEvaluate` to ensure all the configurations have been created before filtering them
     dependencyCheck {
         suppressionFile file("../dependency-suppression.xml").toString()
         failBuildOnCVSS 0
-        skipConfigurations = getConfigurationsToSkip(configurations)
+        scanConfigurations = ["debugRuntimeClasspath", "releaseRuntimeClasspath"]
         nvd {
             datafeedUrl = "https://anonyome-nist-cve-mirror.s3.amazonaws.com/"
         }

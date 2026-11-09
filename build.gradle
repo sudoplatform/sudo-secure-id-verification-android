@@ -11,14 +11,36 @@ buildscript {
 
     repositories {
         google()
-        mavenCentral()
-        maven { url = "https://plugins.gradle.org/m2/" }
+        // CodeArtifact Repository is a pull through mirror of Maven Central and the Gradle Plugin Portal.
+        def codeArtifactUsername = providers.gradleProperty("codeArtifactUsername").orNull
+        def codeArtifactToken = providers.gradleProperty("codeArtifactToken").orNull
+        if (codeArtifactUsername?.trim() && codeArtifactToken?.trim()) {
+            maven {
+                name = "maven-central-store"
+                url = "https://anonyome-947875592751.d.codeartifact.us-east-1.amazonaws.com/maven/maven-central-store/"
+                credentials {
+                    username = codeArtifactUsername
+                    password = codeArtifactToken
+                }
+            }
+            maven {
+                name = "gradle-plugins-store"
+                url = "https://anonyome-947875592751.d.codeartifact.us-east-1.amazonaws.com/maven/gradle-plugins-store/"
+                credentials {
+                    username = codeArtifactUsername
+                    password = codeArtifactToken
+                }
+            }
+        } else {
+            mavenCentral()
+            maven { url = "https://plugins.gradle.org/m2/" }
+        }
     }
     dependencies {
         classpath "com.android.tools.build:gradle:$agp_version"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath "org.jmailen.gradle:kotlinter-gradle:5.2.0"
-        classpath "org.owasp:dependency-check-gradle:12.1.3"
+        classpath "org.owasp:dependency-check-gradle:12.2.2"
         classpath "org.jetbrains.dokka:dokka-gradle-plugin:$dokka_version"
         classpath "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:6.2.0.5505"
         classpath "gradle.plugin.com.cookpad.android.plugin:plugin:1.2.8"
@@ -76,7 +98,21 @@ allprojects {
     repositories {
         mavenLocal()
         google()
-        mavenCentral()
+        // CodeArtifact Repository is a pull through mirror of Maven Central.
+        def codeArtifactUsername = providers.gradleProperty("codeArtifactUsername").orNull
+        def codeArtifactToken = providers.gradleProperty("codeArtifactToken").orNull
+        if (codeArtifactUsername?.trim() && codeArtifactToken?.trim()) {
+            maven {
+                name = "maven-central-store"
+                url = "https://anonyome-947875592751.d.codeartifact.us-east-1.amazonaws.com/maven/maven-central-store/"
+                credentials {
+                    username = codeArtifactUsername
+                    password = codeArtifactToken
+                }
+            }
+        } else {
+            mavenCentral()
+        }
         if (internalRepoUsername?.trim()) {
             maven {
                 name = internalSnapshotRepoName
